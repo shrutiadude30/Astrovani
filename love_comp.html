@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Astrovani - Love Compatibility Checker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4c32f",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#221e10",
+                        "surface-dark": "#2d281a",
+                        "surface-darker": "#1a160c",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(30, 26, 18, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(244, 195, 47, 0.1);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #f4c32f;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        /* Custom scrollbar for subtle look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #221e10; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3d3624; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #554b32; 
+        }
+
+        /* Subtle mandala background pattern */
+        .bg-mandala {
+            background-color: #221e10;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23f4c32f' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-100 min-h-screen bg-mandala">
+<!-- Unified Navigation -->
+<nav class="fixed w-full z-50 transition-all duration-300 glass-panel border-b border-white/5 backdrop-blur-xl" id="mainNav">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-20 items-center">
+<!-- Logo with enhanced glow -->
+<a href="index.html" class="flex-shrink-0 flex items-center gap-2 cursor-pointer group" id="logoHome">
+<div class="relative">
+<span class="material-icons-round text-primary text-4xl transition-transform group-hover:scale-105">auto_awesome</span>
+<div class="absolute -inset-1 bg-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="font-bold text-2xl tracking-tight text-white">Astro<span class="text-primary">vani</span></span>
+</a>
+<!-- Desktop Menu Enhanced -->
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="index.html">Home</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="horoscope.html">Horoscope</a>
+<a class="text-primary border-b-2 border-primary transition-all duration-300 text-sm font-medium" href="love_comp.html">Compatibility</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="chat_board.html">Chatbot</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="blog.html">Blog</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="gemstones.html">Gemstones</a>
+<a href="login.html" id="loginBtnNav" class="bg-primary/10 hover:bg-primary text-primary hover:text-background-dark border border-primary/50 hover:border-primary px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 shadow-lg shadow-primary/5 hover:shadow-primary/20">
+                        Login / Sign Up
+                    </a>
+</div>
+<!-- Mobile Menu Button -->
+<div class="md:hidden flex items-center">
+<button id="mobileMenuBtn" class="text-slate-300 hover:text-white p-2 rounded-full hover:bg-white/5 transition-colors">
+<span class="material-icons-round text-3xl">menu</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Mobile dropdown menu (hidden by default) -->
+<div id="mobileMenuDropdown" class="md:hidden hidden glass-panel border-t border-white/10 backdrop-blur-xl absolute w-full left-0 top-20 py-4 px-4 flex flex-col gap-3 z-40 transition-all">
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="index.html">Home</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="horoscope.html">Horoscope</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="love_comp.html">Compatibility</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="chat_board.html">Chatbot</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="blog.html">Blog</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="gemstones.html">Gemstones</a>
+<a href="login.html" id="mobileLoginBtn" class="bg-primary/20 text-primary py-2 rounded-full mt-2 text-center">Login / Sign Up</a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="pt-28 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+<!-- Hero Section -->
+<div class="text-center mb-12">
+<span class="inline-block py-1 px-3 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-wider uppercase mb-3 border border-primary/20">Vedic Guidance</span>
+<h1 class="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Celestial Union Check</h1>
+<p class="text-gray-400 max-w-2xl mx-auto text-lg font-light">
+                Discover the cosmic resonance between two souls. Our Vedic algorithm analyzes planetary alignments to reveal your true compatibility.
+            </p>
+</div>
+<div class="grid lg:grid-cols-12 gap-8 items-start">
+<!-- Input Section (Left & Center) -->
+<div class="lg:col-span-12 xl:col-span-7 flex flex-col gap-6">
+<!-- Couple Form Container -->
+<div class="bg-surface-dark border border-white/5 rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden group">
+<!-- Decorative glow -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-all duration-700"></div>
+<div class="flex flex-col md:flex-row gap-8 relative z-10">
+<!-- Partner 1 -->
+<div class="flex-1 space-y-5">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary border border-primary/30">
+<span class="material-icons-round text-sm">face</span>
+</div>
+<h3 class="text-lg font-semibold text-white">Partner 1</h3>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-medium text-gray-400 uppercase tracking-wide mb-1.5 ml-1" for="p1-name">Full Name</label>
+<input class="w-full bg-surface-darker border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="p1-name" placeholder="Enter name" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-medium text-gray-400 uppercase tracking-wide mb-1.5 ml-1" for="p1-dob">Birth Date</label>
+<input class="w-full bg-surface-darker border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all [color-scheme:dark]" id="p1-dob" type="date"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-gray-400 uppercase tracking-wide mb-1.5 ml-1" for="p1-zodiac">Zodiac Sign</label>
+<div class="relative">
+<select class="w-full bg-surface-darker border border-white/10 rounded-lg px-4 py-3 text-white appearance-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="p1-zodiac">
+<option>Aries</option>
+<option>Taurus</option>
+<option>Gemini</option>
+<option>Cancer</option>
+<option>Leo</option>
+<option selected="">Virgo</option>
+<option>Libra</option>
+<option>Scorpio</option>
+<option>Sagittarius</option>
+<option>Capricorn</option>
+<option>Aquarius</option>
+<option>Pisces</option>
+</select>
+<span class="material-icons-round absolute right-3 top-3.5 text-gray-500 pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Divider (Desktop) / Spacer (Mobile) -->
+<div class="hidden md:flex flex-col items-center justify-center relative">
+<div class="h-full w-px bg-gradient-to-b from-transparent via-white/10 to-transparent absolute"></div>
+<div class="w-8 h-8 rounded-full bg-surface-dark border border-white/10 flex items-center justify-center relative z-10 shadow-lg text-gray-500">
+<span class="material-icons-round text-base">favorite</span>
+</div>
+</div>
+<div class="md:hidden flex items-center gap-4 text-gray-600">
+<div class="h-px flex-1 bg-white/10"></div>
+<span class="material-icons-round">favorite</span>
+<div class="h-px flex-1 bg-white/10"></div>
+</div>
+<!-- Partner 2 -->
+<div class="flex-1 space-y-5">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary border border-primary/30">
+<span class="material-icons-round text-sm">face_3</span>
+</div>
+<h3 class="text-lg font-semibold text-white">Partner 2</h3>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-medium text-gray-400 uppercase tracking-wide mb-1.5 ml-1" for="p2-name">Full Name</label>
+<input class="w-full bg-surface-darker border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="p2-name" placeholder="Enter name" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-medium text-gray-400 uppercase tracking-wide mb-1.5 ml-1" for="p2-dob">Birth Date</label>
+<input class="w-full bg-surface-darker border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all [color-scheme:dark]" id="p2-dob" type="date"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-gray-400 uppercase tracking-wide mb-1.5 ml-1" for="p2-zodiac">Zodiac Sign</label>
+<div class="relative">
+<select class="w-full bg-surface-darker border border-white/10 rounded-lg px-4 py-3 text-white appearance-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="p2-zodiac">
+<option>Aries</option>
+<option>Taurus</option>
+<option>Gemini</option>
+<option>Cancer</option>
+<option>Leo</option>
+<option>Virgo</option>
+<option>Libra</option>
+<option>Scorpio</option>
+<option selected="">Sagittarius</option>
+<option>Capricorn</option>
+<option>Aquarius</option>
+<option>Pisces</option>
+</select>
+<span class="material-icons-round absolute right-3 top-3.5 text-gray-500 pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<div class="mt-8 pt-6 border-t border-white/5 flex justify-center">
+<button id="checkCompatibilityBtn" class="w-full md:w-auto bg-primary hover:bg-yellow-400 text-surface-darker font-bold py-4 px-12 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+<span class="material-icons-round">stars</span>
+                            Check Vedic Compatibility
+                        </button>
+</div>
+</div>
+<!-- Quick Tips -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+<div class="bg-surface-dark/50 p-4 rounded-xl border border-white/5 flex items-start gap-3">
+<span class="material-icons-round text-primary/70 text-xl mt-0.5">query_stats</span>
+<div>
+<h4 class="text-white text-sm font-semibold">Guna Milan</h4>
+<p class="text-gray-500 text-xs mt-1">36 point detailed matching</p>
+</div>
+</div>
+<div class="bg-surface-dark/50 p-4 rounded-xl border border-white/5 flex items-start gap-3">
+<span class="material-icons-round text-primary/70 text-xl mt-0.5">psychology</span>
+<div>
+<h4 class="text-white text-sm font-semibold">Mental Fit</h4>
+<p class="text-gray-500 text-xs mt-1">Moon sign analysis</p>
+</div>
+</div>
+<div class="bg-surface-dark/50 p-4 rounded-xl border border-white/5 flex items-start gap-3">
+<span class="material-icons-round text-primary/70 text-xl mt-0.5">favorite_border</span>
+<div>
+<h4 class="text-white text-sm font-semibold">Mangal Dosha</h4>
+<p class="text-gray-500 text-xs mt-1">Mars placement check</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Results Section (Right Side) -->
+<div class="lg:col-span-12 xl:col-span-5 space-y-6">
+<!-- Main Result Card -->
+<div class="bg-surface-dark border border-white/5 rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+<!-- Result Glow -->
+<div class="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-bold text-white">Compatibility Report</h2>
+<span id="matchBadge" class="px-2 py-1 bg-green-500/10 text-green-400 text-xs font-bold rounded border border-green-500/20">SELECT PARTNERS</span>
+</div>
+<div class="flex flex-col items-center justify-center mb-8 relative">
+<!-- Score Ring Background -->
+<div class="w-48 h-48 rounded-full border-8 border-surface-darker flex items-center justify-center relative">
+<!-- SVG Progress Circle -->
+<svg class="w-48 h-48 transform -rotate-90 absolute top-[-8px] left-[-8px]" viewbox="0 0 120 120">
+<circle cx="60" cy="60" fill="none" r="54" stroke="#2d281a" stroke-width="8"></circle>
+<circle id="scoreCircle" class="drop-shadow-[0_0_10px_rgba(244,195,47,0.5)] transition-all duration-1000" cx="60" cy="60" fill="none" r="54" stroke="#f4c32f" stroke-dasharray="339.292" stroke-dashoffset="339.292" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="text-center z-10">
+<span id="scorePercentage" class="block text-5xl font-bold text-white">--%</span>
+<span class="text-xs text-gray-400 uppercase tracking-widest mt-1">Score</span>
+</div>
+</div>
+<!-- Decorative stars around -->
+<span class="material-icons-round absolute top-4 left-8 text-primary/20 text-sm animate-pulse">star</span>
+<span class="material-icons-round absolute bottom-8 right-6 text-primary/30 text-xs">star</span>
+</div>
+<div class="bg-surface-darker/50 rounded-xl p-5 border border-white/5 mb-6">
+<h3 class="text-primary text-sm font-bold uppercase tracking-wide mb-2 flex items-center gap-2">
+<span class="material-icons-round text-base">auto_stories</span>
+                            Vedic Insight
+                        </h3>
+<p id="insightText" class="text-gray-300 text-sm leading-relaxed">
+                            Enter details to analyze Guna Milan, Bhakoot, and Nadi compatibility.
+                        </p>
+</div>
+<!-- Comparison Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Harmony -->
+<div class="bg-surface-darker rounded-xl p-4 border-l-2 border-primary">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-icons-round text-primary text-lg">spa</span>
+<h4 class="text-white font-semibold text-sm">Harmony</h4>
+</div>
+<ul id="harmonyList" class="space-y-2">
+<li class="flex items-start gap-2 text-xs text-gray-500 italic">Waiting for analysis...</li>
+</ul>
+</div>
+<!-- Challenges -->
+<div class="bg-surface-darker rounded-xl p-4 border-l-2 border-red-400/50">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-icons-round text-red-400 text-lg">bolt</span>
+<h4 class="text-white font-semibold text-sm">Challenges</h4>
+</div>
+<ul id="challengesList" class="space-y-2">
+<li class="flex items-start gap-2 text-xs text-gray-500 italic">Waiting for analysis...</li>
+</ul>
+</div>
+</div>
+<button class="w-full mt-6 py-3 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 text-sm font-medium transition-colors flex items-center justify-center gap-2">
+<span class="material-icons-round text-lg">share</span>
+                        Share Results
+                    </button>
+</div>
+<!-- Teaser Card -->
+<a href="horoscope.html" class="bg-gradient-to-br from-primary/20 to-surface-dark border border-primary/20 rounded-2xl p-6 flex items-center justify-between group cursor-pointer hover:border-primary/40 transition-all" data-alt="Abstract gradient background hinting at premium features">
+<div>
+<h3 class="text-white font-bold mb-1 group-hover:text-primary transition-colors">Detailed Horoscope?</h3>
+<p class="text-xs text-gray-400">Get a full 20-page life report.</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary text-surface-darker flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-icons-round">arrow_forward</span>
+</div>
+</a>
+</div>
+</div>
+<!-- ================= ENHANCED FOOTER ================= -->
+<footer class="bg-background-dark pt-16 pb-8 border-t border-white/5 relative z-10">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+<div class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-icons-round text-primary text-3xl">auto_awesome</span>
+<span class="font-bold text-2xl tracking-tight text-white">Astro<span class="text-primary">vani</span></span>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed">Illuminating paths through the timeless wisdom of the Vedas and the Bhagavad Gita.</p>
+<div class="flex space-x-4 pt-2">
+<a class="text-slate-400 hover:text-primary transition-colors cursor-pointer"><span class="material-icons-round">facebook</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors cursor-pointer"><span class="material-icons-round">rss_feed</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors cursor-pointer"><span class="material-icons-round">mail</span></a>
+</div>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Services</h4>
+<ul class="space-y-3 text-sm text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="love_comp.html">Free Compatibility</a></li>
+<li><a class="hover:text-primary transition-colors" href="horoscope.html">Daily Predictions</a></li>
+<li><a class="hover:text-primary transition-colors" href="chat_board.html">Ask Gita Chatbot</a></li>
+<li><a class="hover:text-primary transition-colors" href="gemstones.html">Gemstone Store</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Learn</h4>
+<ul class="space-y-3 text-sm text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="blog.html">Vedic Articles</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" onclick="showMessage('Planetary Transits library is arriving soon!')">Planetary Transits</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" onclick="showMessage('Gita Database is being digitized...')">Gita Shlokas</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" onclick="showMessage('Astrological Glossary coming soon!')">Glossary</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Weekly Insights</h4>
+<p class="text-xs text-slate-500 mb-4">Subscribe to receive major planetary updates.</p>
+<form id="newsletterFormFooter" class="flex flex-col gap-2" onsubmit="event.preventDefault(); showMessage('✨ Subscribed to Weekly Insights!')">
+<input class="bg-surface-dark border border-slate-700 text-white px-4 py-2 rounded-lg text-sm focus:outline-none focus:border-primary placeholder-slate-600" placeholder="Your email address" type="email" required="">
+<button type="submit" class="bg-primary hover:bg-yellow-400 text-background-dark font-bold py-2 rounded-lg text-sm transition-colors">Subscribe</button>
+</form>
+</div>
+</div>
+<div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+<p>© 2025 Astrovani. All rights reserved.</p>
+<div class="flex space-x-6">
+<a class="hover:text-slate-300 cursor-pointer" onclick="showMessage('Astrovani Privacy Policy')">Privacy Policy</a>
+<a class="hover:text-slate-300 cursor-pointer" onclick="showMessage('Astrovani Terms of Service')">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+</main>
+
+    <script>
+        // API Configuration
+        const API_BASE_URL = 'http://127.0.0.1:5000';
+        
+        // Helper toast function
+        function showMessage(msg, isSuccess = true) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notify';
+            toast.innerHTML = `<span class="material-icons-round text-primary text-base mr-2" style="vertical-align: middle;">${isSuccess ? 'auto_awesome' : 'info'}</span> ${msg}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Mobile menu toggle
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileDropdown = document.getElementById('mobileMenuDropdown');
+        mobileBtn?.addEventListener('click', () => {
+            mobileDropdown.classList.toggle('hidden');
+        });
+
+        // Sticky nav blur effect on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-background-dark/90', 'backdrop-blur-xl');
+            } else {
+                nav.classList.remove('bg-background-dark/90');
+            }
+        });
+
+        // Get zodiac element affinity
+        function getElement(zodiac) {
+            const fire = ["Aries", "Leo", "Sagittarius"];
+            const earth = ["Taurus", "Virgo", "Capricorn"];
+            const air = ["Gemini", "Libra", "Aquarius"];
+            const water = ["Cancer", "Scorpio", "Pisces"];
+            
+            if (fire.includes(zodiac)) return "Fire";
+            if (earth.includes(zodiac)) return "Earth";
+            if (air.includes(zodiac)) return "Air";
+            if (water.includes(zodiac)) return "Water";
+            return "Unknown";
+        }
+
+        // Enhanced score calculation with zodiac influence
+        function calculateCompatibilityScore(name1, name2, zodiac1, zodiac2) {
+            // Base name hash (0-40)
+            const str = (name1 + name2).toLowerCase().replace(/\s/g, '');
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) hash += str.charCodeAt(i);
+            const nameScore = (hash % 41); // 0-40
+            
+            // Zodiac element compatibility (0-30)
+            const element1 = getElement(zodiac1);
+            const element2 = getElement(zodiac2);
+            let elementScore = 0;
+            
+            const elementMatrix = {
+                "Fire": { "Fire": 25, "Earth": 10, "Air": 20, "Water": 15 },
+                "Earth": { "Fire": 10, "Earth": 25, "Air": 15, "Water": 20 },
+                "Air": { "Fire": 20, "Earth": 15, "Air": 25, "Water": 10 },
+                "Water": { "Fire": 15, "Earth": 20, "Air": 10, "Water": 25 }
+            };
+            elementScore = elementMatrix[element1]?.[element2] || 15;
+            
+            // Zodiac sign compatibility (0-30)
+            const zodiacPairs = {
+                "Aries-Libra": 30, "Aries-Sagittarius": 28, "Aries-Leo": 25,
+                "Taurus-Scorpio": 30, "Taurus-Capricorn": 28, "Taurus-Virgo": 25,
+                "Gemini-Sagittarius": 30, "Gemini-Aquarius": 28, "Gemini-Libra": 25,
+                "Cancer-Capricorn": 30, "Cancer-Pisces": 28, "Cancer-Scorpio": 25,
+                "Leo-Aquarius": 30, "Leo-Sagittarius": 28, "Leo-Gemini": 25,
+                "Virgo-Pisces": 30, "Virgo-Taurus": 28, "Virgo-Capricorn": 25,
+                "Libra-Aries": 30, "Libra-Gemini": 28, "Libra-Aquarius": 25,
+                "Scorpio-Taurus": 30, "Scorpio-Cancer": 28, "Scorpio-Pisces": 25,
+                "Sagittarius-Gemini": 30, "Sagittarius-Aries": 28, "Sagittarius-Leo": 25,
+                "Capricorn-Cancer": 30, "Capricorn-Taurus": 28, "Capricorn-Virgo": 25,
+                "Aquarius-Leo": 30, "Aquarius-Gemini": 28, "Aquarius-Libra": 25,
+                "Pisces-Virgo": 30, "Pisces-Cancer": 28, "Pisces-Scorpio": 25
+            };
+            
+            let pairKey1 = `${zodiac1}-${zodiac2}`;
+            let pairKey2 = `${zodiac2}-${zodiac1}`;
+            let zodiacScore = zodiacPairs[pairKey1] || zodiacPairs[pairKey2] || 15;
+            
+            // Total score: name (0-40) + element (0-30) + zodiac (0-30) = 55-100
+            let totalScore = 55 + Math.floor(nameScore * 0.25) + Math.floor(elementScore * 0.3) + Math.floor(zodiacScore * 0.45);
+            totalScore = Math.min(100, Math.max(55, totalScore));
+            
+            return totalScore;
+        }
+
+        // Get match level and insights based on score
+        function getMatchDetails(score, zodiac1, zodiac2) {
+            if (score >= 80) {
+                return {
+                    level: "HIGH MATCH",
+                    levelClass: "px-2 py-1 bg-green-500/10 text-green-400 text-xs font-bold rounded border border-green-500/20",
+                    insight: `Your spiritual connection is profound. The alignment of ${zodiac1} and ${zodiac2} creates a powerful cosmic bond.<br><br>
+                        <span class="text-primary font-bold">Bhagavad Gita 18.20:</span><br>
+                        <em>"Sarva-bhuteshu yenaikam bhavam avyayam ikshate..."</em><br>
+                        "That knowledge is in the mode of goodness by which one undivided spiritual nature is seen in all living entities."`,
+                    harmony: [
+                        "Soul-level resonance and spiritual alignment",
+                        "Shared life goals and values",
+                        "Excellent emotional understanding",
+                        "Natural attraction and chemistry"
+                    ],
+                    challenges: [
+                        "May over-idealize each other",
+                        "Need to maintain individual identities"
+                    ]
+                };
+            } else if (score >= 70) {
+                return {
+                    level: "GOOD MATCH",
+                    levelClass: "px-2 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold rounded border border-blue-500/20",
+                    insight: `A strong intellectual and emotional bond exists between ${zodiac1} and ${zodiac2}. Focus on being a friend first.<br><br>
+                        <span class="text-primary font-bold">Bhagavad Gita 12.13:</span><br>
+                        <em>"Adveshta sarva-bhutanam maitrah karuna eva cha..."</em><br>
+                        "One who is not envious but is a kind friend to all living entities... such a devotee is very dear to Me."`,
+                    harmony: [
+                        "Excellent communication and understanding",
+                        "Mutual respect and admiration",
+                        "Balanced emotional connection",
+                        "Shared interests and activities"
+                    ],
+                    challenges: [
+                        "Different approaches to finances",
+                        "Decision-making speed differences",
+                        "Need to work on compromise"
+                    ]
+                };
+            } else {
+                return {
+                    level: "FAIR MATCH",
+                    levelClass: "px-2 py-1 bg-yellow-500/10 text-yellow-400 text-xs font-bold rounded border border-yellow-500/20",
+                    insight: `${zodiac1} and ${zodiac2} have distinct paths that require conscious work to align. Avoid attachment to expectations.<br><br>
+                        <span class="text-primary font-bold">Bhagavad Gita 2.62:</span><br>
+                        <em>"Dhyayato vishayan pumsah sangas teshupajayate..."</em><br>
+                        "While contemplating the objects of the senses, a person develops attachment for them, and from such attachment lust develops, and from lust anger arises."`,
+                    harmony: [
+                        "Physical attraction and chemistry",
+                        "Common interests in specific areas",
+                        "Good potential for growth together"
+                    ],
+                    challenges: [
+                        "Ego clashes and pride issues",
+                        "Communication gaps and misunderstandings",
+                        "Different life priorities",
+                        "Need conscious effort to maintain harmony"
+                    ]
+                };
+            }
+        }
+
+        // Save compatibility to database
+        async function saveCompatibilityToDatabase(data) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/save-compatibility`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Error saving compatibility:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Generate PDF report for compatibility
+        async function generateCompatibilityPDF(name1, name2, zodiac1, zodiac2, score, matchDetails) {
+            const jspdfObj = window.jspdf;
+            if (!jspdfObj) {
+                showMessage("⚠️ PDF library failed to load.", false);
+                return null;
+            }
+            
+            const doc = new jspdfObj.jsPDF();
+            
+            // Header
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(22);
+            doc.text("ASTROVANI LOVE COMPATIBILITY REPORT", 105, 20, { align: "center" });
+            
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 32, { align: "center" });
+            
+            doc.line(20, 38, 190, 38);
+            
+            // Partners Information
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text("Partners Information", 20, 50);
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(11);
+            doc.text(`Partner 1: ${name1} (${zodiac1})`, 20, 62);
+            doc.text(`Partner 2: ${name2} (${zodiac2})`, 20, 72);
+            
+            doc.line(20, 78, 190, 78);
+            
+            // Compatibility Score
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text("Compatibility Score", 20, 90);
+            
+            doc.setFontSize(40);
+            doc.setTextColor(244, 195, 47);
+            doc.text(`${score}%`, 20, 110);
+            
+            doc.setFontSize(12);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Match Level: ${matchDetails.level}`, 20, 125);
+            
+            doc.line(20, 132, 190, 132);
+            
+            // Vedic Insight
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.setTextColor(244, 195, 47);
+            doc.text("Vedic Insight", 20, 145);
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(60, 60, 60);
+            const insightLines = doc.splitTextToSize(matchDetails.insight.replace(/<br>/g, ' ').replace(/<[^>]*>/g, ''), 170);
+            doc.text(insightLines, 20, 155);
+            
+            // Harmony Points
+            let yPos = 155 + (insightLines.length * 5);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.setTextColor(34, 197, 94);
+            doc.text("Harmony Points", 20, yPos);
+            yPos += 8;
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.setTextColor(60, 60, 60);
+            matchDetails.harmony.forEach(point => {
+                doc.text(`• ${point}`, 25, yPos);
+                yPos += 6;
+            });
+            
+            yPos += 5;
+            
+            // Challenges
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.setTextColor(239, 68, 68);
+            doc.text("Areas to Work On", 20, yPos);
+            yPos += 8;
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.setTextColor(60, 60, 60);
+            matchDetails.challenges.forEach(challenge => {
+                doc.text(`• ${challenge}`, 25, yPos);
+                yPos += 6;
+            });
+            
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(150, 150, 150);
+            doc.text("© 2025 Astrovani - Your Cosmic Companion", 105, 280, { align: "center" });
+            
+            const pdfFileName = `Astrovani_Compatibility_${name1}_${name2}_${Date.now()}.pdf`;
+            doc.save(pdfFileName);
+            
+            return pdfFileName;
+        }
+
+        // Main compatibility check function
+        document.getElementById('checkCompatibilityBtn')?.addEventListener('click', async () => {
+            const name1 = document.getElementById('p1-name').value.trim();
+            const name2 = document.getElementById('p2-name').value.trim();
+            const zodiac1 = document.getElementById('p1-zodiac').value;
+            const zodiac2 = document.getElementById('p2-zodiac').value;
+            const dob1 = document.getElementById('p1-dob').value;
+            const dob2 = document.getElementById('p2-dob').value;
+            
+            const user = JSON.parse(localStorage.getItem('astrovani_user'));
+
+            if (!name1 || !name2) {
+                showMessage("⚠️ Please enter names for both partners.", false);
+                return;
+            }
+
+            // Show loading state
+            const checkBtn = document.getElementById('checkCompatibilityBtn');
+            const originalBtnText = checkBtn.innerHTML;
+            checkBtn.innerHTML = '<span class="material-icons-round animate-spin">sync</span> Calculating Cosmic Connection...';
+            checkBtn.disabled = true;
+
+            setTimeout(async () => {
+                // Calculate score
+                const score = calculateCompatibilityScore(name1, name2, zodiac1, zodiac2);
+                const matchDetails = getMatchDetails(score, zodiac1, zodiac2);
+                
+                // Update UI
+                const percentageDisplay = document.getElementById('scorePercentage');
+                const circle = document.getElementById('scoreCircle');
+                const insight = document.getElementById('insightText');
+                const matchBadge = document.getElementById('matchBadge');
+                const harmony = document.getElementById('harmonyList');
+                const challenges = document.getElementById('challengesList');
+
+                // Animate Score
+                percentageDisplay.innerText = score + '%';
+                const circumference = 339.292;
+                const offset = circumference - (score / 100) * circumference;
+                circle.style.strokeDashoffset = offset;
+
+                // Update match badge
+                matchBadge.innerText = matchDetails.level;
+                matchBadge.className = matchDetails.levelClass;
+                
+                // Update insight
+                insight.innerHTML = matchDetails.insight;
+                
+                // Update harmony list
+                harmony.innerHTML = matchDetails.harmony.map(point => 
+                    `<li class="flex items-start gap-2 text-xs text-gray-400"><span class="w-1 h-1 rounded-full bg-primary mt-1.5"></span><span>${point}</span></li>`
+                ).join('');
+                
+                // Update challenges list
+                challenges.innerHTML = matchDetails.challenges.map(challenge => 
+                    `<li class="flex items-start gap-2 text-xs text-gray-400"><span class="w-1 h-1 rounded-full bg-red-400 mt-1.5"></span><span>${challenge}</span></li>`
+                ).join('');
+                
+                // Save to database
+                const saveResult = await saveCompatibilityToDatabase({
+                    user_id: user ? user.id : null,
+                    partner1_name: name1,
+                    partner1_dob: dob1 || null,
+                    partner1_zodiac: zodiac1,
+                    partner2_name: name2,
+                    partner2_dob: dob2 || null,
+                    partner2_zodiac: zodiac2,
+                    compatibility_score: score,
+                    match_level: matchDetails.level,
+                    vedic_insight: matchDetails.insight.replace(/<[^>]*>/g, ''), // Strip HTML tags for DB storage
+                    harmony_points: matchDetails.harmony.join('||'),
+                    challenge_points: matchDetails.challenges.join('||'),
+                    pdf_generated: false
+                });
+                
+                if (saveResult.success) {
+                    showMessage(`✨ Analysis complete for ${name1} and ${name2}! Data saved.`, true);
+                    
+                    // Generate PDF
+                    const pdfFileName = await generateCompatibilityPDF(name1, name2, zodiac1, zodiac2, score, matchDetails);
+                    
+                    if (pdfFileName && saveResult.compatibility_id) {
+                        // Update PDF status in database
+                        await fetch(`${API_BASE_URL}/api/update-compatibility-pdf/${saveResult.compatibility_id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                pdf_generated: true,
+                                pdf_path: pdfFileName
+                            })
+                        });
+                        showMessage(`📄 Compatibility report saved as PDF!`, true);
+                    }
+                } else {
+                    showMessage(`⚠️ Analysis complete but data not saved: ${saveResult.error}`, false);
+                }
+                
+                // Restore button
+                checkBtn.innerHTML = originalBtnText;
+                checkBtn.disabled = false;
+            }, 1500);
+        });
+
+        // Share results functionality
+        document.querySelector('.w-full.mt-6.py-3')?.addEventListener('click', async () => {
+            const name1 = document.getElementById('p1-name').value.trim();
+            const name2 = document.getElementById('p2-name').value.trim();
+            const score = document.getElementById('scorePercentage')?.innerText;
+            
+            if (name1 && name2 && score && score !== '--%') {
+                const shareText = `🌙 Cosmic Love Compatibility: ${name1} & ${name2} scored ${score}! ✨\n\nCheck your Vedic compatibility at Astrovani - Your Cosmic Companion!`;
+                
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: 'Astrovani Love Compatibility',
+                            text: shareText,
+                            url: window.location.href
+                        });
+                        showMessage('✨ Shared successfully!');
+                    } catch (err) {
+                        copyToClipboard(shareText);
+                    }
+                } else {
+                    copyToClipboard(shareText);
+                }
+            } else {
+                showMessage('⚠️ Please check compatibility first before sharing.', false);
+            }
+        });
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showMessage('📋 Results copied to clipboard!');
+            }).catch(() => {
+                showMessage('⚠️ Could not copy to clipboard.', false);
+            });
+        }
+
+        // Auto-check for login status in nav
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('astrovani_user'));
+            if (user) {
+                const loginBtn = document.getElementById('loginBtnNav');
+                if (loginBtn) {
+                    loginBtn.innerHTML = `<span class="flex items-center gap-2"><span class="material-icons-round text-sm">person</span>${user.name}</span>`;
+                    loginBtn.href = '#';
+                    loginBtn.onclick = (e) => {
+                        e.preventDefault();
+                        localStorage.removeItem('astrovani_user');
+                        window.location.href = 'index.html';
+                    };
+                }
+                const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+                if (mobileLoginBtn) {
+                    mobileLoginBtn.innerHTML = `<span class="flex items-center justify-center gap-2"><span class="material-icons-round text-sm">person</span>${user.name}</span>`;
+                    mobileLoginBtn.onclick = (e) => {
+                        e.preventDefault();
+                        localStorage.removeItem('astrovani_user');
+                        window.location.href = 'index.html';
+                    };
+                }
+                
+                // Pre-fill Partner 1 if possible
+                const p1NameInput = document.getElementById('p1-name');
+                if (p1NameInput && !p1NameInput.value) p1NameInput.value = user.name;
+            }
+        });
+        
+        // Add toast-notify styles if not already present
+        if (!document.querySelector('style#toast-styles')) {
+            const style = document.createElement('style');
+            style.id = 'toast-styles';
+            style.textContent = `
+                .toast-notify {
+                    position: fixed;
+                    bottom: 24px;
+                    right: 24px;
+                    z-index: 9999;
+                    background: #1e1a12;
+                    border-left: 4px solid #f4c32f;
+                    backdrop-filter: blur(16px);
+                    border-radius: 12px;
+                    padding: 12px 20px;
+                    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+                    color: #f3f4f6;
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                    pointer-events: none;
+                    animation: fadeSlide 0.25s ease-out forwards;
+                }
+                @keyframes fadeSlide {
+                    from { opacity: 0; transform: translateX(30px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+</body></html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Newsreader:ital,wght@0,300;0,400;0,700;1,300;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "error-container": "#93000a",
+                "on-tertiary-container": "#005c71",
+                "primary-container": "#f4c32f",
+                "error": "#ffb4ab",
+                "surface-container-low": "#1f1b12",
+                "surface-container-lowest": "#110e06",
+                "surface-dim": "#17130a",
+                "on-background": "#ebe1d2",
+                "surface-bright": "#3e392e",
+                "outline-variant": "#4e4633",
+                "on-primary-container": "#695100",
+                "on-secondary-fixed-variant": "#574500",
+                "surface-container-high": "#2e291f",
+                "primary-fixed-dim": "#f1c02c",
+                "outline": "#9a907a",
+                "background": "#17130a",
+                "tertiary-fixed-dim": "#51d6fc",
+                "on-tertiary": "#003543",
+                "on-surface-variant": "#d2c5ad",
+                "on-secondary": "#3c2f00",
+                "on-primary-fixed": "#241a00",
+                "on-secondary-fixed": "#241a00",
+                "on-error": "#690005",
+                "primary-fixed": "#ffdf92",
+                "secondary-fixed": "#ffe088",
+                "inverse-surface": "#ebe1d2",
+                "tertiary-fixed": "#b5ebff",
+                "on-tertiary-fixed": "#001f28",
+                "on-tertiary-fixed-variant": "#004e60",
+                "surface-variant": "#39342a",
+                "on-surface": "#ebe1d2",
+                "on-error-container": "#ffdad6",
+                "surface": "#17130a",
+                "inverse-primary": "#755b00",
+                "tertiary": "#bdedff",
+                "surface-container": "#231f16",
+                "inverse-on-surface": "#353025",
+                "secondary-fixed-dim": "#e9c349",
+                "on-primary-fixed-variant": "#594400",
+                "primary": "#f4c32f",
+                "surface-tint": "#f1c02c",
+                "on-secondary-container": "#342800",
+                "tertiary-container": "#55d8ff",
+                "secondary-container": "#af8d11",
+                "secondary": "#e9c349",
+                "on-primary": "#3e2e00",
+                "surface-container-highest": "#39342a"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "gutter": "2.5rem",
+                "stack-lg": "2rem",
+                "stack-md": "1.5rem",
+                "stack-sm": "0.5rem",
+                "container-max": "1280px",
+                "section-padding": "8rem"
+            },
+            "fontFamily": {
+                "display-lg": ["Manrope"],
+                "body-md": ["Manrope"],
+                "body-lg": ["Newsreader"],
+                "display-xl": ["Newsreader"],
+                "headline-md": ["Newsreader"],
+                "label-caps": ["Manrope"]
+            },
+            "fontSize": {
+                "display-lg": ["48px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "body-lg": ["20px", {"lineHeight": "1.6", "fontWeight": "300"}],
+                "display-xl": ["80px", {"lineHeight": "1.1", "fontWeight": "300"}],
+                "headline-md": ["32px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                "label-caps": ["10px", {"lineHeight": "1", "letterSpacing": "0.3em", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>.nebula-bg {
+    background: radial-gradient(circle at 20% 30%, rgba(85, 216, 255, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(244, 195, 47, 0.1) 0%, transparent 50%), #0a0904;
+    position: relative;
+    overflow: hidden
+    }
+.grainy-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuD1mh-B_5jJnMu5y4KbhvKITHOveTB0-FOevnN3oiCAzQYcGlEfIpz8mLVr5wetkEt8P6c33IC84r120_6VQ8B1YOQUfXi2d7r5rJjP7KMS2lU-dPkKanM3DZ2LlchikSEurwZbf6C3mzyZ_Q2bVdrqcWqDB34ccD74XAn5AH6GP-Gz5dFoWNin39x6SEHkNqpN70yARXTmsBRDNkqgmW0RwSaYDcMtv6_tkfVIS0-4uhj2kI9_r0PlcLSg4kgixK9zgKtrLdIG0G4);
+    opacity: 0.04;
+    pointer-events: none
+    }
+.glass-panel {
+    backdrop-filter: blur(20px);
+    background: rgba(18, 16, 8, 0.6);
+    border: 1px solid rgba(244, 195, 47, 0.15);
+    box-shadow: inset 0 0 40px rgba(244, 195, 47, 0.05)
+    }
+.nav-link {
+    position: relative;
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #f4c32f;
+    transition: width 0.3s ease;
+}
+.nav-link:hover::after {
+    width: 100%;
+}
+.golden-glow-border {
+    box-shadow: 0 0 20px rgba(244, 195, 47, 0.1)
+    }
+.portal-button {
+    background: linear-gradient(135deg, #f4c32f 0%, #af8d11 100%);
+    transition: all 0.3s ease
+    }
+.portal-button:hover {
+    box-shadow: 0 0 30px rgba(244, 195, 47, 0.4);
+    transform: translatey(-1px)
+    }
+.mandala-decoration {
+    mask-image: radial-gradient(circle, black 30%, transparent 70%);
+    opacity: 0.1
+    }
+  /* Toast Notification */
+  .toast-notify {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    background: #1e1a12;
+    border-left: 4px solid #f4c32f;
+    backdrop-filter: blur(16px);
+    border-radius: 12px;
+    padding: 12px 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    color: #f3f4f6;
+    font-size: 0.9rem;
+    font-weight: 500;
+    pointer-events: none;
+    animation: fadeSlide 0.25s ease-out forwards;
+  }
+  @keyframes fadeSlide { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Deep Cosmic Background -->
+<div class="fixed inset-0 nebula-bg z-[-1]">
+<div class="grainy-overlay"></div>
+<!-- Decorative Mandala -->
+<div class="absolute -top-40 -right-40 w-[600px] h-[600px] mandala-decoration">
+<img alt="" class="w-full h-full object-contain" data-alt="Intricate sacred geometry mandala pattern in gold lines against a dark cosmic background with soft nebula glows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWNgtfKHNEeqsbuVabEeDkvGaJH7MsJ_ZQalPWoiB2T7Cs6HUmnfCNTAAldUvmxhjEAINytgbTLWHrt7f_-nFn7A_Bm7BQwvVhcPgwRSF23p1JX-5TLE62SX00xSTZ7ReEFOyfHlwYfoymzlAxc3YgR4jxt1wxgBihRXrdJKBKsN-l_-dQ3xop6H7Whe_cS69oTcHA65TH2EnaOJdqU05_Go-rwyY_JCD8F7UuwPC83aerve3fwxr_1__WvZAcp4JH2CPuWuwM-pg"/>
+</div>
+<div class="absolute -bottom-40 -left-40 w-[600px] h-[600px] mandala-decoration scale-x-[-1]">
+<img alt="" class="w-full h-full object-contain" data-alt="Intricate sacred geometry mandala pattern in gold lines against a dark cosmic background with soft nebula glows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMl0NL5SB0xx_RQWxS6FxKqhtVyzs3aPBNrDe16KN00Nl3n1LQAqNKiBrna_2DM-FM1FKYEh1P-xg5ozME7KOq1wcaUaDq6yeGt6SLpBeGAX0qZkTv2g2pfvZV8Q6IVoiilIHEmb3ooRKaRmj87j4JG4aNCo1ZOtMHCH1z2nzgBhIXpj3gYE2Ws1RSrKWd0f_w9ImbU76NQUhUgUEGaTOoGLOCz7Bvnk_MjAfPfl_zQyM3g54KYoClPUw4qf2JEKSdPc6k8mIk09c"/>
+</div>
+</div>
+<!-- ================= ENHANCED NAVIGATION ================= -->
+<nav class="fixed w-full z-50 transition-all duration-300 glass-panel border-b border-white/5 backdrop-blur-xl" id="mainNav">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-20 items-center">
+<!-- Logo with enhanced glow -->
+<a href="index.html" class="flex-shrink-0 flex items-center gap-2 cursor-pointer group" id="logoHome">
+<div class="relative">
+<span class="material-icons-round text-primary text-4xl transition-transform group-hover:scale-105">auto_awesome</span>
+<div class="absolute -inset-1 bg-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="font-bold text-2xl tracking-tight text-white">Astro<span class="text-primary">vani</span></span>
+</a>
+<!-- Desktop Menu Enhanced -->
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="index.html">Home</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="horoscope.html">Horoscope</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="love_comp.html">Compatibility</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="chat_board.html">Chatbot</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="blog.html">Blog</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="gemstones.html">Gemstones</a>
+<a href="login.html" id="loginBtnNav" class="bg-primary/10 hover:bg-primary text-primary hover:text-background-dark border border-primary/50 hover:border-primary px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 shadow-lg shadow-primary/5 hover:shadow-primary/20">
+                        Login / Sign Up
+                    </a>
+</div>
+<!-- Mobile Menu Button -->
+<div class="md:hidden flex items-center">
+<button id="mobileMenuBtn" class="text-slate-300 hover:text-white p-2 rounded-full hover:bg-white/5 transition-colors">
+<span class="material-icons-round text-3xl">menu</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Mobile dropdown menu (hidden by default) -->
+<div id="mobileMenuDropdown" class="md:hidden hidden glass-panel border-t border-white/10 backdrop-blur-xl absolute w-full left-0 top-20 py-4 px-4 flex flex-col gap-3 z-40 transition-all">
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="index.html">Home</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="horoscope.html">Horoscope</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="love_comp.html">Compatibility</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="chat_board.html">Chatbot</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="blog.html">Blog</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="gemstones.html">Gemstones</a>
+<a href="login.html" id="mobileLoginBtn" class="bg-primary/20 text-primary py-2 rounded-full mt-2 text-center">Login / Sign Up</a>
+</div>
+</nav>
+<main class="min-h-screen flex items-center justify-center px-6 py-section-padding">
+<div class="w-full max-w-[480px] space-y-stack-lg">
+<!-- Login Card: Digital Sanctuary -->
+<div class="glass-panel golden-glow-border rounded-xl p-10 relative overflow-hidden">
+  <div id="loginSection">
+<!-- Branding in Card -->
+<div class="text-center space-y-stack-sm mb-10">
+<span class="font-label-caps text-primary uppercase tracking-[0.4em]">Member Login</span>
+<h1 class="font-display-xl text-headline-md text-on-surface">Sign in to your account</h1>
+</div>
+<form class="space-y-stack-md" id="loginForm">
+<!-- Email / Celestial Identifier -->
+<div class="space-y-2">
+<label class="font-label-caps text-on-surface-variant block ml-1">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">auto_awesome</span>
+<input id="loginEmail" class="w-full bg-surface-container-lowest/40 border border-outline-variant/30 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:outline-none focus:border-primary/50 transition-all placeholder:text-outline/40" placeholder="starseeker@cosmos.com" type="email" required/>
+</div>
+</div>
+<!-- Password / Secret Key -->
+<div class="space-y-2">
+<label class="font-label-caps text-on-surface-variant block ml-1">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">key</span>
+<input id="loginPassword" class="w-full bg-surface-container-lowest/40 border border-outline-variant/30 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:outline-none focus:border-primary/50 transition-all placeholder:text-outline/40" placeholder="••••••••" type="password" required/>
+</div>
+</div>
+<!-- Options -->
+<div class="flex items-center justify-between py-2">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="w-4 h-4 rounded border-outline-variant/50 bg-transparent text-primary focus:ring-primary/20" type="checkbox"/>
+<span class="font-body-md text-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Remember me</span>
+</label>
+<a class="font-body-md text-sm text-primary/80 hover:text-primary transition-colors" href="#">Forgot Password?</a>
+</div>
+<!-- Primary Action -->
+<button class="portal-button w-full py-5 rounded-lg text-on-primary font-label-caps text-[12px] tracking-[0.2em] uppercase flex items-center justify-center gap-3" type="submit">
+                        Login to Astrovani
+                        <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">star_shine</span>
+</button>
+</form>
+<!-- Toggle -->
+<div class="mt-10 text-center border-t border-outline-variant/10 pt-8">
+<p class="font-body-md text-on-surface-variant text-sm">
+                        New to Astrovani? 
+                        <a id="toRegister" class="text-primary font-bold ml-1 hover:underline decoration-primary/30 underline-offset-4 cursor-pointer">Register Now</a>
+</p>
+</div>
+</div>
+
+<div id="registerSection" class="hidden">
+<!-- Branding in Card -->
+<div class="text-center space-y-stack-sm mb-10">
+<span class="font-label-caps text-primary uppercase tracking-[0.4em]">Join Astrovani</span>
+<h1 class="font-display-xl text-headline-md text-on-surface">Create your account</h1>
+</div>
+<form class="space-y-stack-md" id="registerForm">
+<!-- Full Name -->
+<div class="space-y-2">
+<label class="font-label-caps text-on-surface-variant block ml-1">Full Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">person</span>
+<input id="regName" class="w-full bg-surface-container-lowest/40 border border-outline-variant/30 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:outline-none focus:border-primary/50 transition-all placeholder:text-outline/40" placeholder="Enter your full name" type="text" required/>
+</div>
+</div>
+<!-- Email -->
+<div class="space-y-2">
+<label class="font-label-caps text-on-surface-variant block ml-1">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">auto_awesome</span>
+<input id="regEmail" class="w-full bg-surface-container-lowest/40 border border-outline-variant/30 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:outline-none focus:border-primary/50 transition-all placeholder:text-outline/40" placeholder="your.email@example.com" type="email" required/>
+</div>
+</div>
+<!-- Password -->
+<div class="space-y-2">
+<label class="font-label-caps text-on-surface-variant block ml-1">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">key</span>
+<input id="regPassword" class="w-full bg-surface-container-lowest/40 border border-outline-variant/30 rounded-lg py-4 pl-12 pr-4 text-on-surface focus:outline-none focus:border-primary/50 transition-all placeholder:text-outline/40" placeholder="••••••••" type="password" required/>
+</div>
+</div>
+<!-- Primary Action -->
+<button class="portal-button w-full py-5 rounded-lg text-on-primary font-label-caps text-[12px] tracking-[0.2em] uppercase flex items-center justify-center gap-3" type="submit">
+                        Create Account
+                        <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">person_add</span>
+</button>
+</form>
+<!-- Toggle -->
+<div class="mt-10 text-center border-t border-outline-variant/10 pt-8">
+<p class="font-body-md text-on-surface-variant text-sm">
+                        Already have an account? 
+                        <a id="toLogin" class="text-primary font-bold ml-1 hover:underline decoration-primary/30 underline-offset-4 cursor-pointer">Login here</a>
+</p>
+</div>
+</div>
+<!-- Abstract Decorative Element -->
+<div class="absolute -bottom-10 -right-10 opacity-20 pointer-events-none">
+<span class="material-symbols-outlined text-[120px] text-primary-fixed-dim select-none" style="font-variation-settings: 'FILL' 0;">flare</span>
+</div>
+</div>
+<!-- Trust Badges / Celestial Ethics -->
+<div class="flex justify-center gap-gutter text-outline/60 px-4">
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-xl">verified_user</span>
+<span class="font-label-caps text-[8px]">Encrypted Soul Data</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-xl">nights_stay</span>
+<span class="font-label-caps text-[8px]">Privacy First Orbit</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-xl">translate_indic</span>
+<span class="font-label-caps text-[8px]">Vedic Precision</span>
+</div>
+</div>
+</div>
+</main>
+<!-- ================= ENHANCED FOOTER ================= -->
+<footer class="bg-background-dark pt-16 pb-8 border-t border-white/5 relative z-10">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+<div class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-icons-round text-primary text-3xl">auto_awesome</span>
+<span class="font-bold text-2xl tracking-tight text-white">Astro<span class="text-primary">vani</span></span>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed">Illuminating paths through the timeless wisdom of the Vedas and the Bhagavad Gita.</p>
+<div class="flex space-x-4 pt-2">
+<a class="text-slate-400 hover:text-primary transition-colors cursor-pointer"><span class="material-icons-round">facebook</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors cursor-pointer"><span class="material-icons-round">rss_feed</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors cursor-pointer"><span class="material-icons-round">mail</span></a>
+</div>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Services</h4>
+<ul class="space-y-3 text-sm text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="love_comp.html">Free Compatibility</a></li>
+<li><a class="hover:text-primary transition-colors" href="horoscope.html">Daily Predictions</a></li>
+<li><a class="hover:text-primary transition-colors" href="chat_board.html">Ask Gita Chatbot</a></li>
+<li><a class="hover:text-primary transition-colors" href="gemstones.html">Gemstone Store</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Learn</h4>
+<ul class="space-y-3 text-sm text-slate-400">
+<li><a class="hover:text-primary transition-colors" href="blog.html">Vedic Articles</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" onclick="showMessage('Coming soon: Planetary Transits Library')">Planetary Transits</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" onclick="showMessage('Coming soon: Gita Shlokas Database')">Gita Shlokas</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" onclick="showMessage('Coming soon: Astro Glossary')">Glossary</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Weekly Insights</h4>
+<p class="text-xs text-slate-500 mb-4">Subscribe to receive major planetary updates.</p>
+<form id="newsletterFormFooter" class="flex flex-col gap-2" onsubmit="event.preventDefault(); showMessage('✨ Subscribed to Weekly Insights!')">
+<input class="bg-surface-container border border-slate-700 text-white px-4 py-2 rounded-lg text-sm focus:outline-none focus:border-primary placeholder-slate-600" placeholder="Your email address" type="email" required>
+<button type="submit" class="bg-primary hover:bg-yellow-400 text-background-dark font-bold py-2 rounded-lg text-sm transition-colors">Subscribe</button>
+</form>
+</div>
+</div>
+<div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+<p>© 2025 Astrovani. All rights reserved.</p>
+<div class="flex space-x-6">
+<a class="hover:text-slate-300 cursor-pointer">Privacy Policy</a>
+<a class="hover:text-slate-300 cursor-pointer">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+
+<script>
+const API_URL = "http://127.0.0.1:5000"; // Flask server
+
+const loginSection = document.getElementById('loginSection');
+const registerSection = document.getElementById('registerSection');
+
+// Mobile Menu
+document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+    document.getElementById('mobileMenuDropdown').classList.toggle('hidden');
+});
+
+// Toggle Forms
+document.getElementById('toRegister')?.addEventListener('click', () => {
+    loginSection.classList.add('hidden');
+    registerSection.classList.remove('hidden');
+});
+
+document.getElementById('toLogin')?.addEventListener('click', () => {
+    registerSection.classList.add('hidden');
+    loginSection.classList.remove('hidden');
+});
+
+// Toast Message
+function showMessage(msg, isSuccess = true) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notify';
+    toast.innerHTML = `
+        <span class="material-icons-round text-primary text-base mr-2" style="vertical-align: middle;">
+            ${isSuccess ? 'auto_awesome' : 'info'}
+        </span> ${msg}
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// ================= REGISTER =================
+document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+        name: document.getElementById('regName').value,
+        email: document.getElementById('regEmail').value,
+        password: document.getElementById('regPassword').value
+    };
+
+    try {
+        const res = await fetch(`${API_URL}/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            showMessage("✨ Registered successfully!");
+            setTimeout(() => window.location.href = "index.html", 2000);
+        } else {
+            showMessage(result.message, false);
+        }
+    } catch (err) {
+        showMessage("Server error!", false);
+    }
+});
+
+// ================= LOGIN =================
+document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+        email: document.getElementById('loginEmail').value,
+        password: document.getElementById('loginPassword').value
+    };
+
+    try {
+        const res = await fetch(`${API_URL}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            localStorage.setItem("astrovani_user", JSON.stringify(result.user));
+            showMessage("🌟 Login successful!");
+            setTimeout(() => window.location.href = "index.html", 2000);
+        } else {
+            showMessage(result.message, false);
+        }
+    } catch (err) {
+        showMessage("Server error!", false);
+    }
+});
+</script>
+</body>
+</html>

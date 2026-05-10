@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Astrovani - Interactive Astrology &amp; Wisdom Blog</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4c32f",
+                        "primary-hover": "#dcb02a",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#221e10",
+                        "surface-dark": "#2c2616",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #221e10; }
+        ::-webkit-scrollbar-thumb { background: #443c25; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f4c32f; }
+        
+        .glass-panel {
+            background: rgba(30, 26, 18, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(244, 195, 47, 0.1);
+        }
+        
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #f4c32f;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        .card-hover-effect {
+            transition: all 0.3s ease;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px -10px rgba(244, 195, 47, 0.15);
+        }
+
+        .modal-backdrop {
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+        }
+        .modal-content {
+            animation: fadeSlideUp 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 font-display min-h-screen flex flex-col transition-colors duration-300">
+<!-- Navbar -->
+<nav class="fixed w-full z-50 transition-all duration-300 glass-panel border-b border-white/5 backdrop-blur-xl" id="mainNav">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-20 items-center">
+<a href="index.html" class="flex-shrink-0 flex items-center gap-2 cursor-pointer group" id="logoHome">
+<div class="relative">
+<span class="material-icons-round text-primary text-4xl transition-transform group-hover:scale-105">auto_awesome</span>
+<div class="absolute -inset-1 bg-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="font-bold text-2xl tracking-tight text-white">Astro<span class="text-primary">vani</span></span>
+</a>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="index.html">Home</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="horoscope.html">Horoscope</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="love_comp.html">Compatibility</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="chat_board.html">Chatbot</a>
+<a class="text-primary border-b-2 border-primary transition-all duration-300 text-sm font-medium" href="blog.html">Blog</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="gemstones.html">Gemstones</a>
+<a href="login.html" id="loginBtnNav" class="bg-primary/10 hover:bg-primary text-primary hover:text-background-dark border border-primary/50 hover:border-primary px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 shadow-lg shadow-primary/5 hover:shadow-primary/20">
+                        Login / Sign Up
+                    </a>
+</div>
+<div class="md:hidden flex items-center">
+<button id="mobileMenuBtn" class="text-slate-300 hover:text-white p-2 rounded-full hover:bg-white/5 transition-colors">
+<span class="material-icons-round text-3xl">menu</span>
+</button>
+</div>
+</div>
+</div>
+<div id="mobileMenuDropdown" class="md:hidden hidden glass-panel border-t border-white/10 backdrop-blur-xl absolute w-full left-0 top-20 py-4 px-4 flex flex-col gap-3 z-40 transition-all">
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="index.html">Home</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="horoscope.html">Horoscope</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="love_comp.html">Compatibility</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="chat_board.html">Chatbot</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="blog.html">Blog</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="gemstones.html">Gemstones</a>
+<a href="login.html" id="mobileLoginBtn" class="bg-primary/20 text-primary py-2 rounded-full mt-2 text-center">Login / Sign Up</a>
+</div>
+</nav>
+
+<main class="flex-grow pt-20">
+<!-- Featured Hero Section (removed Dr. Ananya Sharma info) -->
+<section class="relative py-12 lg:py-20 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-r from-background-dark via-background-dark/90 to-background-dark/40 z-10"></div>
+<img alt="Starry cosmic nebula background" class="w-full h-full object-cover opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeFIFJrpmawjwNo-WJw2IhDWEM_fxBpNM07MwvPgUzcYYPLa9HsMoOWcDWniIcfFU3XLtMdLLllE_HUxeRPnKoM--60ozghUBZMbJpRzsvObmhYd_nrXdF6a54Png_8aeGWTOS-uVrbvO8KREVyeqW4ENJlJF99_ktmm7qc8OLSOHDc0KLPwe-zIBe49O6CQfrycBxsQEuTokoBaB43wx4sYjCPiIHQwODamkH0pMinA1EBhHx_YpG9Qdi5IG1JKzuGOJFhPFQ_3g"/>
+</div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="space-y-6">
+<div class="flex items-center space-x-3">
+<span class="bg-primary text-background-dark text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">Featured Article</span>
+<span class="text-stone-400 text-sm font-medium flex items-center"><span class="material-icons text-base mr-1">schedule</span> 8 min read</span>
+</div>
+<h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">Saturn Retrograde: Karmic Lessons for 2024</h1>
+<p class="text-lg text-stone-300 leading-relaxed max-w-xl">As Shani Dev begins his retrograde motion, distinct karmic patterns emerge for each zodiac sign. Discover how to navigate these energies with grace and discipline.</p>
+<div class="flex items-center space-x-4 pt-4">
+<button id="featuredReadMoreBtn" class="group flex items-center gap-2 bg-primary hover:bg-primary-hover text-background-dark px-6 py-3 rounded-lg font-bold transition-all">
+                                Read Full Article
+                                <span class="material-icons text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="hidden lg:block relative">
+<div class="relative rounded-2xl overflow-hidden aspect-[4/3] shadow-2xl border border-stone-800/50">
+<img alt="Golden astrological chart overlay" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYZDbI-UDTr1ReKIaEhhIy6pFNJlBB5kcwOvQSzQjk50_gCxPTnsS34J8BHm7JblG8aK-l6CyZU9ZnGZx_2dbm0qbPyghFMy95Qu6CIN09PxLH-12tzdftYpOHs2qoy4kJdwshtoKP5474v7SatiOMK6OQo_cwMuKOcEqUCcxdyoUkpsQ00QyZ6NpKXi087jj51OQji9tUF18PEKzp5NNG2tjwT_nvxelnpiqa3ab6oZmW-JmlkJbhDZSjLpA3K8SFRK4Bd4Z8PMg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent opacity-60"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Category Filters (fully functional filtering) -->
+<section class="sticky top-20 z-40 bg-background-light/95 dark:bg-background-dark/95 py-4 border-b border-stone-200 dark:border-stone-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex overflow-x-auto pb-2 scrollbar-hide gap-3 items-center" id="categoryFilters">
+<button data-category="all" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full bg-primary text-background-dark font-bold text-sm shadow-lg shadow-primary/20">All Wisdom</button>
+<button data-category="Planetary Movements" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full bg-stone-200 dark:bg-surface-dark text-stone-700 dark:text-stone-300 hover:text-primary font-medium text-sm transition-colors border border-transparent hover:border-primary/30">Planetary Movements</button>
+<button data-category="Gita Wisdom" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full bg-stone-200 dark:bg-surface-dark text-stone-700 dark:text-stone-300 hover:text-primary font-medium text-sm transition-colors border border-transparent hover:border-primary/30">Gita Wisdom</button>
+<button data-category="Vedic Rituals" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full bg-stone-200 dark:bg-surface-dark text-stone-700 dark:text-stone-300 hover:text-primary font-medium text-sm transition-colors border border-transparent hover:border-primary/30">Vedic Rituals</button>
+<button data-category="Numerology" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full bg-stone-200 dark:bg-surface-dark text-stone-700 dark:text-stone-300 hover:text-primary font-medium text-sm transition-colors border border-transparent hover:border-primary/30">Numerology</button>
+<button data-category="Meditation" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full bg-stone-200 dark:bg-surface-dark text-stone-700 dark:text-stone-300 hover:text-primary font-medium text-sm transition-colors border border-transparent hover:border-primary/30">Meditation</button>
+<button data-category="Vedic Lifestyle" class="filter-btn whitespace-nowrap px-5 py-2 rounded-full bg-stone-200 dark:bg-surface-dark text-stone-700 dark:text-stone-300 hover:text-primary font-medium text-sm transition-colors border border-transparent hover:border-primary/30">Vedic Lifestyle</button>
+</div>
+</div>
+</section>
+
+<!-- Blog Grid with dynamic content - keeping original images -->
+<section class="py-12 lg:py-16">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="mb-10"><h2 class="text-2xl font-bold text-stone-900 dark:text-white flex items-center gap-2"><span class="w-1.5 h-6 bg-primary rounded-full"></span>Latest Insights</h2></div>
+<div id="articlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+
+<div class="my-16 relative rounded-2xl overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-surface-dark border border-primary/20 z-0"></div>
+<div class="relative z-10 px-6 py-10 md:px-12 md:py-14 flex flex-col md:flex-row items-center justify-between gap-8">
+<div class="md:w-1/2"><h3 class="text-2xl md:text-3xl font-bold text-white mb-2">Daily Wisdom in Your Inbox</h3><p class="text-stone-300">Join 50,000+ seekers receiving daily horoscopes and spiritual insights.</p></div>
+<div class="md:w-1/2 w-full max-w-md"><form class="flex flex-col sm:flex-row gap-3" id="newsletterForm"><input class="flex-grow px-4 py-3 rounded-lg bg-background-dark border border-stone-700 text-white placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Your email address" type="email" id="newsEmail" required/><button type="submit" class="bg-primary hover:bg-primary-hover text-background-dark font-bold px-6 py-3 rounded-lg transition-colors">Subscribe</button></form><p class="text-xs text-stone-500 mt-2">No spam, just cosmic guidance.</p></div>
+</div>
+</div>
+<div class="flex justify-center mt-16"><button id="loadMoreBtn" class="bg-surface-dark border border-stone-700 hover:border-primary text-white hover:text-primary px-8 py-3 rounded-lg font-bold transition-colors">Load More Articles</button></div>
+</div>
+</section>
+</main>
+
+<footer class="bg-surface-dark border-t border-stone-800 pt-16 pb-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+<div class="col-span-1"><a href="index.html" class="flex items-center gap-2 cursor-pointer mb-6"><span class="material-icons text-primary text-3xl">auto_awesome</span><span class="font-bold text-2xl tracking-tight text-white">Astrovani</span></a><p class="text-stone-400 text-sm leading-relaxed">Guiding you through the cosmos with ancient Vedic wisdom and modern clarity.</p></div>
+<div><h4 class="text-white font-bold mb-4">Services</h4><ul class="space-y-3 text-sm text-stone-400"><li><a class="hover:text-primary transition-colors" href="horoscope.html">Daily Horoscope</a></li><li><a class="hover:text-primary transition-colors" href="love_comp.html">Kundli Matching</a></li><li><a class="hover:text-primary transition-colors" href="chat_board.html">Ask Gita Chatbot</a></li><li><a class="hover:text-primary transition-colors" href="gemstones.html">Gemstone Shop</a></li></ul></div>
+<div><h4 class="text-white font-bold mb-4">Learn</h4><ul class="space-y-3 text-sm text-stone-400"><li><a class="hover:text-primary transition-colors" href="blog.html">Blog</a></li><li><a class="hover:text-primary transition-colors cursor-pointer" onclick="alert('Planetary Transits library is coming soon!')">Planetary Transits</a></li><li><a class="hover:text-primary transition-colors cursor-pointer" onclick="alert('Vedic Glossary database is being built.')">Vedic Glossary</a></li><li><a class="hover:text-primary transition-colors" href="index.html#featuresSection">About Us</a></li></ul></div>
+<div><h4 class="text-white font-bold mb-4">Connect</h4><div class="flex space-x-4 mb-6"><a class="w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center hover:bg-primary hover:text-background-dark transition-all text-white font-bold" href="#">f</a><a class="w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center hover:bg-primary hover:text-background-dark transition-all text-white font-bold" href="#">r</a><a class="w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center hover:bg-primary hover:text-background-dark transition-all text-white font-bold" href="#">m</a></div></div>
+</div>
+<div class="border-t border-stone-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-stone-500"><p>© 2024 Astrovani. All rights reserved.</p><div class="flex space-x-6 mt-4 md:mt-0"><a class="hover:text-white transition-colors" href="#">Privacy Policy</a><a class="hover:text-white transition-colors" href="#">Terms of Service</a></div></div>
+</div>
+</footer>
+
+<!-- Modal for detailed article view -->
+<div id="articleModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 modal-backdrop transition-all" style="display: none;">
+<div class="relative max-w-3xl w-full max-h-[85vh] overflow-y-auto rounded-2xl bg-background-dark border border-primary/30 shadow-2xl modal-content">
+<div class="sticky top-0 right-0 flex justify-end p-3 bg-background-dark/80 backdrop-blur-sm z-10"><button id="closeModalBtn" class="text-stone-400 hover:text-primary transition-colors p-2 rounded-full bg-stone-800/50"><span class="material-icons">close</span></button></div>
+<div id="modalContentBody" class="px-6 pb-8 pt-2"></div>
+</div>
+</div>
+
+<script>
+    // ---------- BLOG DATABASE (preserving all original image URLs for cards) ----------
+    // Image URLs from original design - keeping exact same images
+    const cardImages = [
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuCfVhdLwPpKP2CdACmi-nauR_Hib5AdL3WT6qf-5J6Petm6BD4w6AU-Ta-fD8K342xh3y1CDSUAxaeD0zOQGoanCfsrEteMP65C6D2SqEOBZYeelGvWZ14U_6HAMJtpNJD0RnsP7NiiQ_5EC7McVJ80eejq-fgbz-0S--AeKhQABT_FKHtyArANC9Ewi6HVWFngN0FpgLA2nnfj7FCPDsHgxy1tRwbozs79Ps7x14Qjd-ogUz0Wi8kJptbluf5l6HRWmbaOxHkOyDI",
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuDBnbOpKUtq6PSylSuzZcWAgX9lXZJ7wAm2AzRMcra3yjxiK_DHvEvHeyFOcdH9cxEk39oE5FEfaIc6ynJq7ll8MWYNoR3PLMu5Dh6C_aPHjMV15_1Hs0FLYKUHuWo2lrvY9-AvvT60SmPqiwJ79qMZV58ERJIrWhjUOcCNZrqYYyhz7_ngH7UbtnAv-HCPU_Ga4xfJ4bjvxk5JDlklYYzeENx66OMysBuCKY4f_baBHeh_26ewiGWXIimKtw63Ij3DXXRMdg9serE",
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuC7K97Jv3SGZW8m5z30AYuOYCiz8zCr-prsD05M6JjZWJ_3O5k6rGPUeE5R3vLBc2G5Lv8RAN3PN55O677nLZYyrERbo8q1VSZ1WEHK7hVHdMG_0MpD_MZOsNPHPCCuiVH1PJjtGsVUItHmhVa1_2E4N_4c2gNJdx6grJ3dJ4-784x_oItl73t2B9d-yLbOrVns9JK4zZTn-IKS36b40vjYwXeKuzq0siIlpzK64_ZY0LnccAts_otaLstDV6fYT9MsmuSfrn6MlFQ",
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuDlHHzF3oILFNN6x8sXaU7Jej3qHgMivS7iJJiJw_JnNkYTBEOe16CyTHp9estHxrzGBFU7-G2F3H7daQfEbT6NgkbNL06vKD5VHRUOSvLkVwsQsI_cu2q3Z1O46cQ2l1kxj5rDMDwVXb7oG4lJ-IVgxmE1RjcaXiZmn1xif_8Sxf4tDrku44wTa1-NXWesUqcR0ycmYit54zRKqlo7oN6sHYG3UaWyCZRwdEYNuTame3muU01zv6MqBVgwlzK2RYch_ge_tRxhbO8",
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuACrWe7q5ltrXl0gS4h7Bh0s2ArIk--YURHOdZIiLks8I332pVBS30isvBE8LYdUg76n-dYiok_i_xdV5nnVTg6Xi6cEcs3d7_EKFSaZ-7Jht9BERbuFIH977mkltJ5AVCklo89SJE1C51ugPgTIePqcX0ijHykvqDnzyXLA4tedURvcTLRiFBeI507Orcsw7WFqMzUCxsvg1KpDKZ6MGmD6Z_xqYziz-ho1QUyJTWOuH0WwfodvGb4vN-L_ljTdN56jjgYMk-wPoE",
+        "https://lh3.googleusercontent.com/aida-public/AB6AXuAF4MrGW7--hzy4tyPPhoeWzxYu0XonFog0dJBmZhdCHDDTksH1zXSt8qmM4pP7CDcV5mdX2Z5cVk3l1kE1aZfC0Wn09c356Ssa-Pth3UR7abHYD695WZCC2FonSISxo97uOz509IaHmKc305Ux2yIL3cH7wB1CSW0ZrBWEI0NxSxDWCNNS9wCY_Ieprx9OYmZtckSon4fqc0gwAUpQhpawWsud_jJNVfblRbEmY2LJ7kbVTMPCRXEFoea7YLNxvxHuvtylbewV504"
+    ];
+
+    const allArticles = [
+        { id: 1, title: "Understanding Your Moon Sign & Emotional Health", category: "Planetary Movements", date: "Oct 24, 2023", readTime: "5 min read", excerpt: "The moon governs our mind and emotions. Learn how your Chandra Rashi influences your subconscious reactions.", content: "<p class='mb-4'>In Vedic astrology, the Moon (Chandra) represents the mind, emotions, and innate habits. Unlike the Sun sign which reflects ego, the Moon sign reveals your emotional core. When the Moon is well-placed, you experience mental clarity and peace. This article explores each Moon sign's emotional patterns and offers gemstone and mantra remedies to balance lunar energy. For example, a strong Moon in Rohini nakshatra brings creativity, while in Ashlesha it may indicate deep intuition.</p><p class='mb-4'>Understanding your Moon sign helps in relationships, career choices, and spiritual practices. Chanting Om Som Somaya Namah on Mondays can strengthen lunar influence. Also, wearing a natural pearl after proper consultation brings emotional stability.</p><p>Track lunar transits to avoid emotional turbulence during eclipse seasons. Keep a moon journal to align your activities with lunar phases for holistic well-being.</p>", imgIndex: 0 },
+        { id: 2, title: "5 Verses from the Bhagavad Gita for Anxiety", category: "Gita Wisdom", date: "Oct 22, 2023", readTime: "4 min read", excerpt: "Ancient wisdom for modern stress. Discover how Lord Krishna's guidance on detachment can bring peace.", content: "<p class='mb-4'>The Bhagavad Gita offers timeless tools to conquer anxiety. Verse 2.47: 'You have a right to perform your prescribed duty, but you are not entitled to the fruits of action.' This shifts focus from outcome to effort, reducing worry.</p><p class='mb-4'>Verse 6.5: 'One must elevate oneself by one's own mind, not degrade oneself.' Learn to witness thoughts without judgment. Practical tips: daily chanting of 'Shree Krishna Sharanam Mamah' and practicing Nishkama Karma (action without attachment).</p><p>Integrate these verses into morning meditation and notice reduced stress within weeks.</p>", imgIndex: 1 },
+        { id: 3, title: "The Spiritual Significance of Ekadashi Fasting", category: "Vedic Rituals", date: "Oct 18, 2023", readTime: "6 min read", excerpt: "Why fasting twice a month aligns your body with lunar cycles and enhances spiritual growth.", content: "<p class='mb-4'>Ekadashi, the 11th lunar day, holds immense spiritual potency. Fasting on this day detoxifies the body, sharpens the mind, and attunes you to cosmic energies. Ancient texts state that observing Ekadashi burns karmic debts and promotes devotion.</p><p class='mb-4'>Different Ekadashis have unique benefits: Nirjala Ekadashi (without water) is considered most powerful. During fast, engage in japa, reading scriptures, and charity. Breaking the fast at the correct time amplifies results.</p><p>Modern research shows intermittent fasting on lunar rhythms boosts cellular repair. Start with a fruit fast and gradually advance to complete fasting for profound inner clarity.</p>", imgIndex: 2 },
+        { id: 4, title: "Life Path Number 7: The Seeker of Truth", category: "Numerology", date: "Oct 15, 2023", readTime: "3 min read", excerpt: "Are you a Life Path 7? Explore your analytical nature, need for solitude, and spiritual potential.", content: "<p class='mb-4'>Life Path 7 individuals are intuitive, analytical, and deeply spiritual. They thrive in solitude, research, and mystical studies. Famous 7s include Einstein and Princess Diana. Their challenge is overcoming isolation and trusting their inner wisdom.</p><p class='mb-4'>To harness the power of 7, meditate daily, keep a dream journal, and wear purple or green stones like amethyst. Career paths: data scientist, philosopher, astrologer, or healer.</p><p>Relationships: 7 needs a partner who respects independence. Avoid overthinking by grounding practices like yoga.</p>", imgIndex: 3 },
+        { id: 5, title: "Ayurveda for Autumn: Balancing Vata Dosha", category: "Vedic Lifestyle", date: "Oct 12, 2023", readTime: "6 min read", excerpt: "As the wind picks up, learn which foods and routines will keep you grounded and warm this season.", content: "<p class='mb-4'>Autumn is Vata season – dry, windy, cool. To stay balanced, favor warm, cooked, oily foods like soups, stews, and root vegetables. Add ghee and warming spices: ginger, cinnamon, turmeric.</p><p class='mb-4'>Daily abhyanga (oil massage) with sesame oil calms the nervous system. Establish a regular routine: early bedtime, gentle yoga, and avoid cold drinks. Herbal teas like licorice or ashwagandha reduce anxiety.</p><p>Protect yourself from harsh winds and practice Nasya (nasal oil) to prevent dryness. Following these principles ensures vibrant health through autumn.</p>", imgIndex: 4 },
+        { id: 6, title: "Chanting Om: The Science of Sound Vibration", category: "Meditation", date: "Oct 10, 2023", readTime: "7 min read", excerpt: "Why does 'Om' resonate so deeply? Exploring the vibrational frequency and its effect on the nervous system.", content: "<p class='mb-4'>Om is the primordial sound, representing the universe's vibration. Neuroscientific studies show that chanting Om reduces activity in the limbic system (stress center) and increases vagal tone, promoting relaxation.</p><p class='mb-4'>The sound 'A' represents waking state, 'U' the dream state, and 'M' deep sleep. Chanting Om for 10 minutes daily lowers blood pressure and improves focus. Visualize the sound rising from the navel to the crown chakra.</p><p>Group Om chanting creates coherent brain waves among participants, fostering collective harmony. Integrate Om into meditation or before meals to sanctify the mind.</p>", imgIndex: 5 },
+        { id: 7, title: "Mars Transit 2024: Igniting Your Courage", category: "Planetary Movements", date: "Nov 2, 2023", readTime: "5 min read", excerpt: "Mars in Aries brings fiery energy. Channel it wisely to avoid conflicts and achieve goals.", content: "<p class='mb-4'>Mars, the planet of action and drive, enters its own sign Aries on Jan 2024. This transit boosts leadership, physical stamina, and competitive spirit. However, watch for impulsiveness. Perform Hanuman Chalisa recitation to ground Martian energy.</p><p class='mb-4'>Best activities: starting new fitness regimes, launching businesses, or assertive communication. Avoid legal disputes and sharp objects on Tuesdays. Red coral gemstone strengthens positive Mars.</p><p>Mars in Aries favors warriors and entrepreneurs. Use this period to set boundaries and take initiative without aggression.</p>", imgIndex: 0 }
+    ];
+
+    let articlesToShow = 6;
+    let activeCategory = "all";
+
+    function getFilteredArticles() {
+        if (activeCategory === "all") return allArticles;
+        return allArticles.filter(art => art.category === activeCategory);
+    }
+
+    function renderArticles() {
+        const filtered = getFilteredArticles();
+        const displayArticles = filtered.slice(0, articlesToShow);
+        const grid = document.getElementById("articlesGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        displayArticles.forEach((article, idx) => {
+            const card = document.createElement("article");
+            card.className = "group bg-white dark:bg-surface-dark rounded-xl overflow-hidden border border-stone-200 dark:border-stone-800 card-hover-effect flex flex-col h-full transition-all";
+            const imgUrl = cardImages[article.imgIndex % cardImages.length];
+            card.innerHTML = `
+                <div class="relative h-56 overflow-hidden">
+                    <span class="absolute top-4 left-4 bg-background-dark/80 backdrop-blur-sm text-primary text-xs font-bold px-3 py-1 rounded-full z-10 border border-primary/20">${article.category}</span>
+                    <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="${imgUrl}" alt="${article.title}">
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="flex items-center text-xs text-stone-500 dark:text-stone-400 mb-3 space-x-2">
+                        <span>${article.date}</span><span class="w-1 h-1 bg-stone-600 rounded-full"></span><span>${article.readTime}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-stone-900 dark:text-stone-100 mb-3 group-hover:text-primary transition-colors">${article.title}</h3>
+                    <p class="text-stone-600 dark:text-stone-400 text-sm leading-relaxed mb-4 flex-grow">${article.excerpt}</p>
+                    <button data-id="${article.id}" class="read-more-btn inline-flex items-center text-primary font-bold text-sm uppercase tracking-wide group-hover:underline decoration-2 underline-offset-4">
+                        Read More <span class="material-icons text-sm ml-1">arrow_forward</span>
+                    </button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+        document.querySelectorAll(".read-more-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const id = parseInt(btn.getAttribute("data-id"));
+                const article = allArticles.find(a => a.id === id);
+                if (article) showModal(article);
+            });
+        });
+        const loadBtn = document.getElementById("loadMoreBtn");
+        if (loadBtn) {
+            const totalFiltered = getFilteredArticles().length;
+            if (articlesToShow >= totalFiltered) loadBtn.style.display = "none";
+            else loadBtn.style.display = "flex";
+        }
+    }
+
+    function showModal(article) {
+        const modal = document.getElementById("articleModal");
+        const modalBody = document.getElementById("modalContentBody");
+        modalBody.innerHTML = `
+            <div class="mb-2 flex justify-between items-start">
+                <div><span class="bg-primary/20 text-primary text-xs font-bold px-3 py-1 rounded-full">${article.category}</span></div>
+                <div class="text-stone-400 text-sm flex items-center gap-2"><span class="material-icons text-sm">schedule</span> ${article.readTime}</div>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold text-white mt-3 mb-2">${article.title}</h2>
+            <div class="text-stone-400 text-sm mb-6">${article.date}</div>
+            <div class="prose prose-invert max-w-none text-stone-300 leading-relaxed space-y-4">${article.content}</div>
+            <div class="mt-8 pt-4 border-t border-stone-800 flex justify-end">
+                <button id="modalCloseInner" class="bg-primary/10 hover:bg-primary text-primary hover:text-background-dark px-5 py-2 rounded-full transition-all">Close</button>
+            </div>
+        `;
+        modal.style.display = "flex";
+        document.body.style.overflow = "hidden";
+        const closeInner = document.getElementById("modalCloseInner");
+        if (closeInner) closeInner.addEventListener("click", closeModal);
+    }
+
+    function closeModal() {
+        const modal = document.getElementById("articleModal");
+        modal.style.display = "none";
+        document.body.style.overflow = "";
+    }
+
+    function initFilters() {
+        const filterBtns = document.querySelectorAll(".filter-btn");
+        filterBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const category = btn.getAttribute("data-category");
+                activeCategory = category;
+                articlesToShow = 6;
+                filterBtns.forEach(b => {
+                    if (b.getAttribute("data-category") === category) {
+                        b.classList.remove("bg-stone-200", "dark:bg-surface-dark", "text-stone-700");
+                        b.classList.add("bg-primary", "text-background-dark", "shadow-lg", "shadow-primary/20");
+                    } else {
+                        b.classList.remove("bg-primary", "text-background-dark", "shadow-lg", "shadow-primary/20");
+                        b.classList.add("bg-stone-200", "dark:bg-surface-dark", "text-stone-700", "dark:text-stone-300");
+                    }
+                });
+                renderArticles();
+            });
+        });
+    }
+
+    document.getElementById("loadMoreBtn")?.addEventListener("click", () => {
+        articlesToShow += 3;
+        renderArticles();
+    });
+
+    document.getElementById("featuredReadMoreBtn")?.addEventListener("click", () => {
+        const featuredArticle = {
+            id: 99,
+            title: "Saturn Retrograde: Karmic Lessons for 2024",
+            category: "Planetary Movements",
+            date: "Nov 5, 2024",
+            readTime: "8 min read",
+            content: `<p class='mb-4'>Saturn retrograde is a profound period for reviewing responsibilities, karmic debts, and long-term goals. From June to November 2024, Shani Dev moves backward in Aquarius/Pisces, urging introspection. Each zodiac sign faces specific lessons: Aries must restructure career, Taurus revisit finances, Gemini heal communication patterns, Cancer address home matters, Leo reflect on romance, Virgo improve health routines, Libra re-evaluate partnerships, Scorpio confront deep fears, Sagittarius refine spiritual practices, Capricorn reassess ambitions, Aquarius embrace authenticity, Pisces surrender ego.</p><p class='mb-4'>Remedies: donate black sesame seeds on Saturdays, recite Shani Chalisa, serve the elderly. Avoid new major contracts. Instead, complete pending tasks. Journal about fears and discipline.</p><p>Saturn retrograde rewards those who face reality with maturity. By December, clarity emerges for those who did the inner work.</p>`,
+            excerpt: "As Shani Dev begins his retrograde motion, distinct karmic patterns emerge for each zodiac sign."
+        };
+        showModal(featuredArticle);
+    });
+
+    const newsletterForm = document.getElementById("newsletterForm");
+    if (newsletterForm) {
+        newsletterForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("newsEmail").value;
+            if (email) {
+                alert(`✨ Thank you ${email}! You've been subscribed to cosmic wisdom.`);
+                document.getElementById("newsEmail").value = "";
+            } else alert("Please enter a valid email.");
+        });
+    }
+
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const mobileDropdown = document.getElementById('mobileMenuDropdown');
+    mobileBtn?.addEventListener('click', () => mobileDropdown.classList.toggle('hidden'));
+
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('mainNav');
+        if (window.scrollY > 50) nav.classList.add('bg-background-dark/90', 'backdrop-blur-xl');
+        else nav.classList.remove('bg-background-dark/90');
+    });
+
+    // Check login status
+    document.addEventListener('DOMContentLoaded', () => {
+        const user = JSON.parse(localStorage.getItem('astrovani_user'));
+        if (user) {
+            const loginBtn = document.getElementById('loginBtnNav');
+            if (loginBtn) {
+                loginBtn.innerHTML = `<span class="flex items-center gap-2"><span class="material-icons-round text-sm">person</span>${user.name}</span>`;
+                loginBtn.href = '#';
+                loginBtn.onclick = (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('astrovani_user');
+                    window.location.reload();
+                };
+            }
+            const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+            if (mobileLoginBtn) {
+                mobileLoginBtn.innerHTML = `<span class="flex items-center justify-center gap-2"><span class="material-icons-round text-sm">person</span>${user.name}</span>`;
+                mobileLoginBtn.onclick = (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('astrovani_user');
+                    window.location.href = 'index.html';
+                };
+            }
+        }
+    });
+
+    document.getElementById("closeModalBtn")?.addEventListener("click", closeModal);
+    window.addEventListener("click", (e) => { if (e.target === document.getElementById("articleModal")) closeModal(); });
+
+    renderArticles();
+    initFilters();
+</script>
+</body>
+</html>

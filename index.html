@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Astrovani - Personalized Astrology & Gita-Based Guidance</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<!-- jsPDF Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Theme Config -->
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4c32f",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#131008",
+                        "card-dark": "#1e1a12",
+                        "accent-blue": "#1E3A8A",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                    backgroundImage: {
+                        'celestial-gradient': 'linear-gradient(to bottom, rgba(19, 16, 8, 0.8), rgba(19, 16, 8, 1))',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom styles for glassmorphism and glow effects */
+        .glass-panel {
+            background: rgba(30, 26, 18, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(244, 195, 47, 0.1);
+        }
+        
+        .glow-hover:hover {
+            box-shadow: 0 0 20px rgba(244, 195, 47, 0.2);
+        }
+
+        .text-gold-gradient {
+            background: linear-gradient(to right, #f4c32f, #ffeaa7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .mandala-spin {
+            animation: spin-slow 60s linear infinite;
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* smooth notifications */
+        .toast-notify {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            background: #1e1a12;
+            border-left: 4px solid #f4c32f;
+            backdrop-filter: blur(16px);
+            border-radius: 12px;
+            padding: 12px 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            color: #f3f4f6;
+            font-size: 0.9rem;
+            font-weight: 500;
+            pointer-events: none;
+            animation: fadeSlide 0.25s ease-out forwards;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Enhanced nav hover underline effect */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #f4c32f;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1a12;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f4c32f;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 font-display transition-colors duration-300 antialiased overflow-x-hidden">
+<!-- ================= ENHANCED NAVIGATION ================= -->
+<nav class="fixed w-full z-50 transition-all duration-300 glass-panel border-b border-white/5 backdrop-blur-xl" id="mainNav">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-20 items-center">
+<!-- Logo with enhanced glow -->
+<a href="index.html" class="flex-shrink-0 flex items-center gap-2 cursor-pointer group" id="logoHome">
+<div class="relative">
+<span class="material-icons-round text-primary text-4xl transition-transform group-hover:scale-105">auto_awesome</span>
+<div class="absolute -inset-1 bg-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="font-bold text-2xl tracking-tight text-white">Astro<span class="text-primary">vani</span></span>
+</a>
+<!-- Desktop Menu Enhanced -->
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="index.html">Home</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="horoscope.html">Horoscope</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="love_comp.html">Compatibility</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="chat_board.html">Chatbot</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="blog.html">Blog</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="gemstones.html">Gemstones</a>
+<a href="login.html" id="loginBtnNav" class="bg-primary/10 hover:bg-primary text-primary hover:text-background-dark border border-primary/50 hover:border-primary px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 shadow-lg shadow-primary/5 hover:shadow-primary/20">
+                        Login / Sign Up
+                    </a>
+</div>
+<!-- Mobile Menu Button -->
+<div class="md:hidden flex items-center">
+<button id="mobileMenuBtn" class="text-slate-300 hover:text-white p-2 rounded-full hover:bg-white/5 transition-colors">
+<span class="material-icons-round text-3xl">menu</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Mobile dropdown menu (hidden by default) -->
+<div id="mobileMenuDropdown" class="md:hidden hidden glass-panel border-t border-white/10 backdrop-blur-xl absolute w-full left-0 top-20 py-4 px-4 flex flex-col gap-3 z-40 transition-all">
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="index.html">Home</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="horoscope.html">Horoscope</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="love_comp.html">Compatibility</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="chat_board.html">Chatbot</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="blog.html">Blog</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="gemstones.html">Gemstones</a>
+<a href="login.html" id="mobileLoginBtn" class="bg-primary/20 text-primary py-2 rounded-full mt-2 text-center">Login / Sign Up</a>
+</div>
+</nav>
+
+<!-- ================= ENHANCED HERO SECTION with Additional Nav Integration ================= -->
+<div class="relative min-h-screen flex flex-col justify-center items-center pt-20 overflow-hidden" id="heroSection">
+<!-- Background Image with Overlay -->
+<div class="absolute inset-0 z-0">
+<img alt="Celestial night sky with stars and nebula" class="w-full h-full object-cover opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWX6P7GkLR_gpavkEiJb64L420Y61kANPlhhG2y1sB_rYfhyheXmsNuiehUa80zKjIutQa7IXDGrpx73hLh8bikM3PGcgfqVwaDRrJBzwkvLgioW-GoHZ3fOr0VC37KwK8f-gi8LyIhARMdFJoI3A04gU4YOTYjYD_x3s3YzJWh_hIY-WUNOVoMiTXmLjqrsrrpNj5ATFNo_NA3YmFE76ZkdOn8Hy4zaAaP8inlxgYk0NUEQ-m8JeAqYzXaE-iEtQX2VEsPxR-G44">
+<div class="absolute inset-0 bg-celestial-gradient"></div>
+</div>
+<!-- Decorative Mandala -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-10 pointer-events-none z-0">
+<img alt="Sacred geometry mandala pattern" class="w-full h-full object-contain mandala-spin invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1Mu4nmMkbUldXaQgtJVaLHB9J2Oujw5fL-UAhGpPIfxRLBDu7DvY_Bzj9Uou2lUypqZMWt20FqoMHEgYNahFTwy7jyeAlPexkfmZ4jMDrKbyYdXxaKHdLmd8iTfhUQgzKUlKeMSp1qTItXhCs3rppqUjkyaHurPAhRkwNBiONNgxLqDRxEW8TsJv0_pqVCNvNr9I6K9-as7T_D18U26i2BDpZ5AeoppWWRAsShba3WPiKhNwIOn_gSeKQVIHdAzlufLrgovKWyys">
+</div>
+<!-- Content Container -->
+<div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-20 py-12">
+<!-- Hero Text -->
+<div class="flex-1 text-center lg:text-left space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-primary text-xs font-bold uppercase tracking-wider">Vedic Wisdom for Modern Life</span>
+</div>
+<h1 class="text-5xl lg:text-7xl font-bold leading-tight text-white">
+                    Personalized Astrology &amp; <br/>
+<span class="text-gold-gradient">Gita-Based Guidance</span>
+</h1>
+<p class="text-lg text-slate-300 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
+                    Unlock the secrets of the cosmos. Get precise Kundli analysis, daily horoscopes, and spiritual solutions directly from the Bhagavad Gita tailored to your life path.
+                </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto lg:mx-0 pt-4">
+<a href="horoscope.html" class="group bg-primary hover:bg-yellow-400 text-background-dark px-6 py-4 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+                        Get Horoscope
+                        <span class="material-icons-round text-lg group-hover:translate-x-1 transition-transform">auto_awesome</span>
+</a>
+<a href="love_comp.html" class="group bg-white/10 hover:bg-white/20 text-white px-6 py-4 rounded-xl font-bold backdrop-blur-md transition-all duration-300 border border-white/10 flex items-center justify-center gap-2">
+                        Check Compatibility
+                        <span class="material-icons-round text-lg group-hover:scale-110 transition-transform">favorite</span>
+</a>
+<a href="chat_board.html" class="group bg-white/10 hover:bg-white/20 text-white px-6 py-4 rounded-xl font-bold backdrop-blur-md transition-all duration-300 border border-white/10 flex items-center justify-center gap-2">
+                        Ask Gita Chatbot
+                        <span class="material-icons-round text-lg group-hover:rotate-12 transition-transform">psychology</span>
+</a>
+<a href="gemstones.html" class="group bg-white/10 hover:bg-white/20 text-white px-6 py-4 rounded-xl font-bold backdrop-blur-md transition-all duration-300 border border-white/10 flex items-center justify-center gap-2">
+                        Explore Gemstones
+                        <span class="material-icons-round text-lg group-hover:animate-pulse transition-transform">diamond</span>
+</a>
+</div>
+</div>
+<!-- Quick Birth Details Card (Fully Interactive) -->
+<div class="w-full max-w-md lg:w-[420px] shrink-0">
+<div class="glass-panel rounded-2xl p-8 relative overflow-hidden group">
+<div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-all duration-500"></div>
+<div class="relative z-10">
+<h3 class="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+<span class="material-icons-round text-primary">auto_graph</span>
+                            Free Kundli & Horoscope
+                        </h3>
+<p class="text-slate-400 text-sm mb-6">Enter your birth details to reveal your cosmic blueprint.</p>
+<form id="kundliForm" class="space-y-5">
+<div class="space-y-1.5">
+<label class="text-xs font-semibold text-slate-300 uppercase tracking-wide ml-1">Date of Birth</label>
+<div class="relative">
+<input id="dobInput" class="w-full bg-background-dark/50 border border-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder-slate-500" type="date" required>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-semibold text-slate-300 uppercase tracking-wide ml-1">Time of Birth</label>
+<div class="relative">
+<input id="tobInput" class="w-full bg-background-dark/50 border border-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" type="time" required>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-semibold text-slate-300 uppercase tracking-wide ml-1">Place of Birth</label>
+<div class="relative">
+<span class="material-icons-round absolute left-3 top-3.5 text-slate-500">location_on</span>
+<input id="placeInput" class="w-full bg-background-dark/50 border border-slate-700 text-white rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder-slate-500" placeholder="Enter City, Country" type="text" required>
+</div>
+</div>
+<button id="generateChartBtn" class="w-full bg-gradient-to-r from-primary to-yellow-500 hover:from-yellow-400 hover:to-yellow-600 text-background-dark font-bold py-3.5 rounded-lg shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 mt-2 flex items-center justify-center gap-2" type="button">
+                                Generate Chart
+                                <span class="material-icons-round text-sm">download</span>
+                            </button>
+<div id="resultLinks" class="hidden mt-4 pt-4 border-t border-white/5 space-y-3">
+    <a href="horoscope.html" class="block text-center text-primary text-sm font-bold hover:underline">View Detailed Daily Horoscope →</a>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+<!-- Scroll Down Indicator -->
+<div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden md:block">
+<span class="material-icons-round text-slate-500 text-3xl">keyboard_arrow_down</span>
+</div>
+</div>
+
+<!-- Features Section (unchanged UI, preserved) -->
+<section class="py-24 relative bg-background-dark" id="featuresSection">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-16">
+<h2 class="text-primary font-bold tracking-wider uppercase text-sm mb-3">Divine Offerings</h2>
+<h3 class="text-3xl md:text-4xl font-bold text-white mb-4">Discover Your Path to Enlightenment</h3>
+<p class="text-slate-400 max-w-2xl mx-auto">Astrovani combines ancient Vedic science with modern technology to provide you with accurate, actionable life guidance.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1: Daily Horoscope -->
+<div class="bg-card-dark rounded-2xl p-1 border border-white/5 hover:border-primary/30 transition-all duration-300 group hover:-translate-y-1 cursor-pointer" data-card="horoscope">
+<div class="bg-[#18150f] rounded-xl p-8 h-full flex flex-col items-start relative overflow-hidden">
+<div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
+<span class="material-icons-round text-primary text-2xl group-hover:text-background-dark">wb_sunny</span>
+</div>
+<h4 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">Daily Horoscope</h4>
+<p class="text-slate-400 leading-relaxed mb-6">Start your day with insights based on your Moon sign. Prepare for opportunities and avoid potential pitfalls.</p>
+<div class="mt-auto flex items-center text-sm font-bold text-primary hover:text-white transition-colors cursor-pointer read-forecast">
+                            Read Forecast <span class="material-icons-round text-sm ml-1">arrow_forward</span>
+</div>
+<img class="absolute -bottom-10 -right-10 w-40 h-40 opacity-5 object-contain rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJpaqyeOLTNN-H2_hmxLGNw1SzbI4fFEBS293Jd6kUtKjlb9eFniQItx3pnlpPSrBwt-ow41YqT0DBdAnFiN0hgwt_XeqdIRbyhbAS9RCzoKMtOk0l42QISHcQxe-3zn3bUTqy5USZaAxPPazovCwfxvbG_SzvBv65FToCvrsfLRwKxIrRm4NU73ZJ8nSP9GNNgzzeGctpX86-cKjaPfcEJ6Gbhb_5FILcwwFscva-x2jyExdMMF6XlGwWuJe5cq7wh99CsVM4ZXA">
+</div>
+</div>
+<!-- Card 2: Gita Wisdom -->
+<div class="bg-card-dark rounded-2xl p-1 border border-white/5 hover:border-primary/30 transition-all duration-300 group hover:-translate-y-1 cursor-pointer" data-card="gita">
+<div class="bg-[#18150f] rounded-xl p-8 h-full flex flex-col items-start relative overflow-hidden">
+<div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
+<span class="material-icons-round text-primary text-2xl group-hover:text-background-dark">menu_book</span>
+</div>
+<h4 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">Gita Wisdom</h4>
+<p class="text-slate-400 leading-relaxed mb-6">Spiritual answers to modern problems. Receive personalized shlokas from the Bhagavad Gita for your situation.</p>
+<div class="mt-auto flex items-center text-sm font-bold text-primary hover:text-white transition-colors cursor-pointer get-guidance">
+                            Get Guidance <span class="material-icons-round text-sm ml-1">arrow_forward</span>
+</div>
+<img class="absolute -bottom-10 -right-10 w-40 h-40 opacity-5 object-contain rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx4vm0UK1usgSXRbKx5sVDqyrQajQT9w9ACLdZFpYdAz6d2n_4-59B7zcashvRQUwPP9FDrPm_jDxzL-opwYbt0MFF_gguPFCNE-uxF_8BK2a_n1bKr9kiVvS_9K24ENtW0S_aTxDTC0zAkRzZp-BNdJy0EIZXDTlNaj-aZnj8-HP2XpZ3h_uMQYmFaNk336yJrWPTOqQwJxdTfVTNzFuP6uj8N2X6cJXBAtNoXki-yXsVbtI69LTVtVIjxKglXsFDw7AI5QVZ_Ag">
+</div>
+</div>
+<!-- Card 3: Kundli Matching -->
+<div class="bg-card-dark rounded-2xl p-1 border border-white/5 hover:border-primary/30 transition-all duration-300 group hover:-translate-y-1 cursor-pointer" data-card="matching">
+<div class="bg-[#18150f] rounded-xl p-8 h-full flex flex-col items-start relative overflow-hidden">
+<div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
+<span class="material-icons-round text-primary text-2xl group-hover:text-background-dark">favorite</span>
+</div>
+<h4 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">Compatibility Matching</h4>
+<p class="text-slate-400 leading-relaxed mb-6">Ensure harmony in relationships. Detailed Guna Milan and compatibility analysis for marriage and partnerships.</p>
+<div class="mt-auto flex items-center text-sm font-bold text-primary hover:text-white transition-colors cursor-pointer check-compat">
+                            Check Compatibility <span class="material-icons-round text-sm ml-1">arrow_forward</span>
+</div>
+<img class="absolute -bottom-10 -right-10 w-40 h-40 opacity-5 object-contain rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2ZU5_eofzQ70-1YULeLjibNynF_-mOHyL8c_iJq1GfZKY7ax92zh699PLfp6MWgZ66MBZSfAoUvmZ2QDCJ6Nx8uJmMRx2fnePwrH-roBs87VS9YywSfZHbSCJ98kKwAi0YEWUBCuxScYmzaWw1xOlvoWeY2c-_k0sm0rYgD8521cetGeCqrA77WiyziuoSHOyDTSr5_MZUFKH-igy7bkvAK4ku26Py49yzIQPqHN4UqViYIMVRyL-X6LoSLgOHw6Kq8zebgG1QdQ">
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Why Choose Us / Stat Section (unchanged) -->
+<section class="py-20 relative border-y border-white/5 bg-[#18150f]">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col lg:flex-row items-center justify-between gap-12">
+<div class="lg:w-1/2 space-y-6">
+<h3 class="text-3xl font-bold text-white">Trusted by Thousands of Seekers</h3>
+<p class="text-slate-400 leading-relaxed">
+                        Our platform blends the precision of mathematical astrology with the profound intuition of Vedic traditions. We don't just predict; we guide you towards your highest potential.
+                    </p>
+<ul class="space-y-4 pt-4">
+<li class="flex items-start gap-3">
+<span class="material-icons-round text-primary mt-0.5">check_circle</span>
+<div>
+<strong class="block text-white">100% Private &amp; Secure</strong>
+<span class="text-sm text-slate-500">Your birth data is encrypted and never shared.</span>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-icons-round text-primary mt-0.5">check_circle</span>
+<div>
+<strong class="block text-white">Expert Verified Algorithms</strong>
+<span class="text-sm text-slate-500">Calculations verified by top Vedic acharyas.</span>
+</div>
+</li>
+</ul>
+</div>
+<div class="lg:w-1/2 grid grid-cols-2 gap-4 w-full">
+<div class="bg-background-dark p-6 rounded-2xl border border-white/5 text-center">
+<span class="text-4xl font-bold text-primary block mb-1">50k+</span>
+<span class="text-sm text-slate-400">Charts Generated</span>
+</div>
+<div class="bg-background-dark p-6 rounded-2xl border border-white/5 text-center">
+<span class="text-4xl font-bold text-primary block mb-1">4.8</span>
+<span class="text-sm text-slate-400">User Rating</span>
+</div>
+<div class="bg-background-dark p-6 rounded-2xl border border-white/5 text-center">
+<span class="text-4xl font-bold text-primary block mb-1">100%</span>
+<span class="text-sm text-slate-400">Vedic Accuracy</span>
+</div>
+<div class="bg-background-dark p-6 rounded-2xl border border-white/5 text-center">
+<span class="text-4xl font-bold text-primary block mb-1">24/7</span>
+<span class="text-sm text-slate-400">AI Guidance</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Footer (preserved) -->
+<footer class="bg-background-dark pt-16 pb-8 border-t border-white/5">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+<div class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-icons-round text-primary text-3xl">auto_awesome</span>
+<span class="font-bold text-2xl tracking-tight text-white">Astro<span class="text-primary">vani</span></span>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed">Illuminating paths through the timeless wisdom of the Vedas and the Bhagavad Gita.</p>
+<div class="flex space-x-4 pt-2">
+<a class="text-slate-400 hover:text-primary transition-colors cursor-pointer social-fb"><span class="material-icons-round">facebook</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors cursor-pointer social-tw"><span class="material-icons-round">rss_feed</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors cursor-pointer social-mail"><span class="material-icons-round">mail</span></a>
+</div>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Services</h4>
+<ul class="space-y-3 text-sm text-slate-400">
+<li><a class="hover:text-primary transition-colors cursor-pointer" href="love_comp.html">Free Compatibility</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" href="love_comp.html">Compatibility Matching</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" href="horoscope.html">Daily Predictions</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" href="chat_board.html">Ask an Astrologer</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Learn</h4>
+<ul class="space-y-3 text-sm text-slate-400">
+<li><a class="hover:text-primary transition-colors cursor-pointer" data-learn="transits">Planetary Transits</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" data-learn="shlokas">Gita Shlokas</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" href="blog.html">Vedic Articles</a></li>
+<li><a class="hover:text-primary transition-colors cursor-pointer" data-learn="glossary">Glossary</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Weekly Insights</h4>
+<p class="text-xs text-slate-500 mb-4">Subscribe to receive major planetary updates.</p>
+<form id="newsletterForm" class="flex flex-col gap-2">
+<input id="newsletterEmail" class="bg-card-dark border border-slate-700 text-white px-4 py-2 rounded-lg text-sm focus:outline-none focus:border-primary placeholder-slate-600" placeholder="Your email address" type="email" required>
+<button type="submit" class="bg-primary hover:bg-yellow-400 text-background-dark font-bold py-2 rounded-lg text-sm transition-colors">Subscribe</button>
+</form>
+</div>
+</div>
+<div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+<p>© 2025 Astrovani. All rights reserved.</p>
+<div class="flex space-x-6">
+<a class="hover:text-slate-300 cursor-pointer" id="privacyLink">Privacy Policy</a>
+<a class="hover:text-slate-300 cursor-pointer" id="termsLink">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+
+<script>
+        // API Configuration
+        const API_BASE_URL = 'http://127.0.0.1:5000';
+        
+        // Helper toast function
+        function showMessage(msg, isSuccess = true) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notify';
+            toast.innerHTML = `<span class="material-icons-round text-primary text-base mr-2" style="vertical-align: middle;">${isSuccess ? 'auto_awesome' : 'info'}</span> ${msg}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        // Zodiac Calculation Logic
+        function getZodiacSign(dateStr) {
+            const [year, month, day] = dateStr.split('-').map(Number);
+            
+            if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return "Aquarius";
+            if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return "Pisces";
+            if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return "Aries";
+            if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) return "Taurus";
+            if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) return "Gemini";
+            if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) return "Cancer";
+            if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) return "Leo";
+            if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) return "Virgo";
+            if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) return "Libra";
+            if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) return "Scorpio";
+            if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) return "Sagittarius";
+            if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return "Capricorn";
+            return "Leo";
+        }
+
+        // Get zodiac traits for PDF
+        function getZodiacTraits(zodiac) {
+            const traits = {
+                "Aries": "Courageous, determined, and confident. You are a natural born leader with endless energy.",
+                "Taurus": "Reliable, patient, and practical. You value stability and have a strong connection to the material world.",
+                "Gemini": "Gentle, affectionate, and curious. Your dual nature makes you adaptable and intellectually vibrant.",
+                "Cancer": "Tenacious, highly imaginative, and loyal. You are deeply intuitive and connected to family values.",
+                "Leo": "Creative, passionate, and generous. You shine brightly and have a natural charisma that attracts others.",
+                "Virgo": "Loyal, analytical, and kind. Your attention to detail and service-oriented nature brings order to chaos.",
+                "Libra": "Cooperative, diplomatic, and gracious. You seek balance and harmony in all relationships.",
+                "Scorpio": "Resourceful, powerful, and brave. Your intensity and passion allow you to transform challenges into victories.",
+                "Sagittarius": "Generous, idealistic, and have a great sense of humor. You seek truth and higher knowledge.",
+                "Capricorn": "Responsible, disciplined, and an excellent manager. Your ambition knows no bounds.",
+                "Aquarius": "Progressive, original, and independent. You think outside the box and value intellectual freedom.",
+                "Pisces": "Compassionate, artistic, and intuitive. Your connection to the spiritual realm is profound."
+            };
+            return traits[zodiac] || "Inclined towards spiritual growth and cosmic wisdom.";
+        }
+
+        // Generate personalized prediction text
+        function generatePredictionText(zodiac, name) {
+            const predictions = {
+                "Aries": "This year brings dynamic energy and new beginnings. Your natural leadership will shine through career opportunities. Focus on balancing your fiery nature with patience in relationships.",
+                "Taurus": "Financial stability and material gains are highlighted. Your practical approach will yield long-term benefits. Love life sees harmony and deeper connections.",
+                "Gemini": "Communication skills bring new opportunities. Your adaptability will help navigate changes. Short travels and learning experiences are favored.",
+                "Cancer": "Home and family matters take center stage. Emotional healing and nurturing relationships bring joy. Creative projects flourish.",
+                "Leo": "Career recognition and personal achievements are highlighted. Your creative expression attracts positive attention. Romance is passionate and fulfilling.",
+                "Virgo": "Health and daily routines need attention. Service to others brings satisfaction. A practical approach to love yields stability.",
+                "Libra": "Relationships and partnerships are emphasized. Balance in all areas of life brings success. Legal matters and contracts favor you.",
+                "Scorpio": "Transformation and deep healing are possible. Financial investments yield returns. Intimate relationships deepen significantly.",
+                "Sagittarius": "Higher learning and travel opportunities arise. Philosophical pursuits bring joy. Your optimistic nature attracts abundance.",
+                "Capricorn": "Career advancement and public recognition are likely. Your disciplined approach brings rewards. Long-term goals materialize.",
+                "Aquarius": "Social circles expand with meaningful connections. Innovation in career brings success. Unexpected opportunities arise.",
+                "Pisces": "Spiritual growth and artistic expression flourish. Intuitive abilities strengthen. Compassionate actions bring karmic rewards."
+            };
+            
+            const nameGreeting = name && name !== 'Guest' ? `Dear ${name}, ` : '';
+            return `${nameGreeting}${predictions[zodiac] || 'The stars align in your favor. Trust your intuition and embrace the cosmic energies around you.'}`;
+        }
+
+        // Save horoscope to database
+        async function saveHoroscopeToDatabase(data) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/save-horoscope`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Error saving horoscope:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // PDF Generation function with database save
+        async function generatePDFReport(name, zodiac, dob, tob, place) {
+            const jspdfObj = window.jspdf;
+            if (!jspdfObj) {
+                showMessage("⚠️ PDF library failed to load. Please check your connection.", false);
+                return;
+            }
+            
+            const doc = new jspdfObj.jsPDF();
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(22);
+            doc.text("ASTROVANI COSMIC REPORT", 105, 20, { align: "center" });
+            doc.setFontSize(14);
+            doc.text(`Birth Chart for: ${name || 'Seeker'}`, 20, 40);
+            doc.setFont("helvetica", "normal");
+            doc.text(`Zodiac Sign: ${zodiac}`, 20, 50);
+            doc.text(`Date of Birth: ${dob}`, 20, 60);
+            doc.text(`Time of Birth: ${tob}`, 20, 70);
+            doc.text(`Place of Birth: ${place}`, 20, 80);
+            doc.setDrawColor(244, 195, 47);
+            doc.line(20, 85, 190, 85);
+
+            const traits = getZodiacTraits(zodiac);
+            const prediction = generatePredictionText(zodiac, name);
+
+            doc.setFont("helvetica", "bold");
+            doc.text("YOUR PERSONALITY TRAITS", 20, 100);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(11);
+            doc.text(traits, 20, 110, { maxWidth: 170 });
+            
+            doc.setFont("helvetica", "bold");
+            doc.text("LIFETIME PREDICTIONS", 20, 135);
+            doc.setFont("helvetica", "normal");
+            doc.text(prediction, 20, 145, { maxWidth: 170 });
+
+            doc.setFont("helvetica", "bold");
+            doc.text("COSMIC GUIDANCE", 20, 175);
+            doc.setFont("helvetica", "normal");
+            doc.text("• Practice meditation during sunrise to align with cosmic energies", 20, 185);
+            doc.text("• The coming months favor spiritual growth and self-discovery", 20, 195);
+            doc.text("• Surround yourself with yellow and gold to attract prosperity", 20, 205);
+            doc.text("• Trust your intuition - your inner voice is divinely guided", 20, 215);
+
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text("© 2025 Astrovani - Your Cosmic Companion", 105, 280, { align: "center" });
+            
+            const pdfFileName = `Astrovani_Report_${zodiac}_${Date.now()}.pdf`;
+            doc.save(pdfFileName);
+            
+            return { success: true, pdfFileName: pdfFileName };
+        }
+        
+        // Generate chart with PDF and save to database
+        document.getElementById('generateChartBtn')?.addEventListener('click', async () => {
+            const dob = document.getElementById('dobInput')?.value;
+            const tob = document.getElementById('tobInput')?.value;
+            const place = document.getElementById('placeInput')?.value.trim();
+            const user = JSON.parse(localStorage.getItem('astrovani_user'));
+
+            if (!dob || !tob || !place) {
+                showMessage("⚠️ Please fill Date, Time & Place of birth for your Kundli analysis.", false);
+                return;
+            }
+            
+            const zodiac = getZodiacSign(dob);
+            const userName = user ? user.name : 'Guest';
+            const userId = user ? user.id : null;
+            const predictionText = generatePredictionText(zodiac, userName);
+            
+            localStorage.setItem('astrovani_selected_zodiac', zodiac);
+            showMessage(`✨ Calculating Chart for ${zodiac}...`, true);
+            
+            // First, save to database
+            const saveResult = await saveHoroscopeToDatabase({
+                user_id: userId,
+                user_name: userName,
+                zodiac_sign: zodiac,
+                date_of_birth: dob,
+                time_of_birth: tob,
+                place_of_birth: place,
+                prediction_text: predictionText,
+                pdf_generated: false
+            });
+            
+            if (saveResult.success) {
+                showMessage(`✅ Birth details saved! Generating your cosmic report...`, true);
+                
+                // Generate PDF
+                setTimeout(async () => {
+                    const pdfResult = await generatePDFReport(userName, zodiac, dob, tob, place);
+                    
+                    if (pdfResult.success) {
+                        // Update PDF status in database
+                        await fetch(`${API_BASE_URL}/api/update-pdf-status/${saveResult.prediction_id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                pdf_generated: true,
+                                pdf_path: pdfResult.pdfFileName
+                            })
+                        });
+                        
+                        document.getElementById('resultLinks').classList.remove('hidden');
+                        showMessage(`✅ PDF Report for ${zodiac} generated and saved successfully!`, true);
+                    } else {
+                        showMessage(`⚠️ PDF generation failed, but your data is saved.`, false);
+                    }
+                }, 1500);
+            } else {
+                showMessage(`⚠️ Failed to save data: ${saveResult.error}`, false);
+                // Still generate PDF even if save fails
+                setTimeout(async () => {
+                    await generatePDFReport(userName, zodiac, dob, tob, place);
+                    document.getElementById('resultLinks').classList.remove('hidden');
+                    showMessage(`✅ PDF Report for ${zodiac} generated!`, true);
+                }, 1500);
+            }
+        });
+        
+        // Feature cards interactive
+        document.querySelectorAll('[data-card="horoscope"]').forEach(el => {
+            el?.addEventListener('click', () => window.location.href = 'horoscope.html');
+        });
+        document.querySelectorAll('[data-card="gita"]').forEach(el => {
+            el?.addEventListener('click', () => window.location.href = 'chat_board.html');
+        });
+        document.querySelectorAll('[data-card="matching"]').forEach(el => {
+            el?.addEventListener('click', () => window.location.href = 'love_comp.html');
+        });
+
+        // Check login status
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('astrovani_user'));
+            if (user) {
+                const loginBtn = document.getElementById('loginBtnNav');
+                if (loginBtn) {
+                    loginBtn.innerHTML = `<span class="flex items-center gap-2"><span class="material-icons-round text-sm">person</span>${user.name}</span>`;
+                    loginBtn.href = '#';
+                    loginBtn.onclick = (e) => {
+                        e.preventDefault();
+                        localStorage.removeItem('astrovani_user');
+                        window.location.reload();
+                    };
+                }
+                const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+                if (mobileLoginBtn) {
+                    mobileLoginBtn.innerHTML = `<span class="flex items-center justify-center gap-2"><span class="material-icons-round text-sm">person</span>${user.name}</span>`;
+                    mobileLoginBtn.onclick = (e) => {
+                        e.preventDefault();
+                        localStorage.removeItem('astrovani_user');
+                        window.location.reload();
+                    };
+                }
+            }
+        });
+        
+        // Footer links and newsletter
+        document.querySelectorAll('[data-learn="transits"], [data-learn="shlokas"], [data-learn="articles"], [data-learn="glossary"]').forEach(link => {
+            link.addEventListener('click', (e) => showMessage(`📚 ${e.currentTarget.innerText} — Vedic knowledge library.`, true));
+        });
+        document.getElementById('privacyLink')?.addEventListener('click', () => showMessage("🔒 Privacy Policy: We protect your astrological data with highest encryption.", true));
+        document.getElementById('termsLink')?.addEventListener('click', () => showMessage("📜 Terms of Service: Use Astrovani for spiritual growth & guidance.", true));
+        document.getElementById('newsletterForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('newsletterEmail')?.value.trim();
+            if (!email || !email.includes('@')) showMessage("✉️ Please enter a valid email address.", false);
+            else {
+                showMessage(`✅ Subscribed! Weekly astro insights will be sent to ${email}`, true);
+                document.getElementById('newsletterEmail').value = '';
+            }
+        });
+        document.querySelectorAll('.social-fb, .social-tw, .social-mail').forEach(icon => {
+            icon.addEventListener('click', () => showMessage("🌐 Connect with Astrovani on social channels for daily wisdom.", true));
+        });
+        
+        // Sticky nav blur effect on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-background-dark/90', 'backdrop-blur-xl');
+            } else {
+                nav.classList.remove('bg-background-dark/90');
+            }
+        });
+    </script>
+</body>
+</html>

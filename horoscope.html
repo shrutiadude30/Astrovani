@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Astrovani - Daily &amp; Monthly Horoscope Generator</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4c32f",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#131008",
+                        "card-dark": "#1e1a12",
+                        "surface-dark": "#2d281a",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                    backgroundImage: {
+                        'star-pattern': "radial-gradient(white 1px, transparent 1px)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(30, 26, 18, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(244, 195, 47, 0.1);
+        }
+        .glass-card {
+            background: rgba(30, 26, 18, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(244, 195, 47, 0.1);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #f4c32f;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(244, 195, 47, 0.3);
+        }
+        .active-tab {
+            background-color: #f4c32f;
+            color: #221e10;
+        }
+        .inactive-tab {
+            background-color: transparent;
+            color: #9ca3af;
+        }
+        .stars-bg {
+            background-size: 50px 50px;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        }
+        .zodiac-btn-active {
+            background-color: #f4c32f !important;
+            color: #131008 !important;
+            box-shadow: 0 0 20px rgba(244, 195, 47, 0.5);
+            border-color: #f4c32f !important;
+        }
+        .zodiac-btn-active span {
+            color: #131008 !important;
+        }
+        .category-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .category-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(244, 195, 47, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200 min-h-screen relative overflow-x-hidden selection:bg-primary selection:text-background-dark">
+<!-- Subtle Star Background Pattern -->
+<div class="fixed inset-0 pointer-events-none z-0 stars-bg opacity-30"></div>
+
+<!-- ================= ENHANCED NAVIGATION ================= -->
+<nav class="fixed w-full z-50 transition-all duration-300 glass-panel border-b border-white/5 backdrop-blur-xl" id="mainNav">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-20 items-center">
+<a href="index.html" class="flex-shrink-0 flex items-center gap-2 cursor-pointer group" id="logoHome">
+<div class="relative">
+<span class="material-icons-round text-primary text-4xl transition-transform group-hover:scale-105">auto_awesome</span>
+<div class="absolute -inset-1 bg-primary/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<span class="font-bold text-2xl tracking-tight text-white">Astro<span class="text-primary">vani</span></span>
+</a>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="index.html">Home</a>
+<a class="text-primary border-b-2 border-primary transition-all duration-300 text-sm font-medium" href="horoscope.html">Horoscope</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="love_comp.html">Compatibility</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="chat_board.html">Chatbot</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="blog.html">Blog</a>
+<a class="text-slate-300 hover:text-primary transition-all duration-300 text-sm font-medium nav-link" href="gemstones.html">Gemstones</a>
+<a href="login.html" id="loginBtnNav" class="bg-primary/10 hover:bg-primary text-primary hover:text-background-dark border border-primary/50 hover:border-primary px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 shadow-lg shadow-primary/5 hover:shadow-primary/20">Login / Sign Up</a>
+</div>
+<div class="md:hidden flex items-center">
+<button id="mobileMenuBtn" class="text-slate-300 hover:text-white p-2 rounded-full hover:bg-white/5 transition-colors">
+<span class="material-icons-round text-3xl">menu</span>
+</button>
+</div>
+</div>
+</div>
+<div id="mobileMenuDropdown" class="md:hidden hidden glass-panel border-t border-white/10 backdrop-blur-xl absolute w-full left-0 top-20 py-4 px-4 flex flex-col gap-3 z-40 transition-all">
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="index.html">Home</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="horoscope.html">Horoscope</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="love_comp.html">Compatibility</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="chat_board.html">Chatbot</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="blog.html">Blog</a>
+<a class="text-slate-300 hover:text-primary py-2 px-3 rounded-lg hover:bg-white/5 transition-colors" href="gemstones.html">Gemstones</a>
+<a href="login.html" id="mobileLoginBtn" class="bg-primary/20 text-primary py-2 rounded-full mt-2 text-center">Login / Sign Up</a>
+</div>
+</nav>
+
+<!-- Main Content -->
+<main class="relative z-10 pt-28 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<h2 class="text-primary text-sm font-bold uppercase tracking-widest mb-2">Daily Guidance</h2>
+<h1 class="text-4xl md:text-5xl font-bold text-white mb-2">Your Cosmic Insights</h1>
+<p class="text-gray-400 text-lg" id="currentDate"></p>
+</div>
+<div class="glass-card rounded-xl p-4 flex items-center gap-4 min-w-[280px]">
+<div class="bg-primary/20 p-3 rounded-full text-primary">
+<span class="material-icons-round text-2xl">nights_stay</span>
+</div>
+<div>
+<div class="text-xs text-primary font-semibold uppercase tracking-wider">Current Transit</div>
+<div class="text-white font-medium" id="transitSign">Moon in Pisces</div>
+<div class="text-xs text-gray-400 mt-1" id="transitDesc">Intuition is heightened today.</div>
+</div>
+</div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+<!-- Left Column: Zodiac Selector -->
+<div class="lg:col-span-3 space-y-8">
+<div class="glass-card rounded-2xl p-6">
+<h3 class="text-lg font-semibold text-white mb-4">Select Sign</h3>
+<div class="grid grid-cols-4 gap-3" id="zodiacGrid">
+    <!-- 12 zodiac signs will be populated by JS -->
+</div>
+</div>
+<div class="glass-card rounded-2xl p-6" id="luckWidget">
+<h3 class="text-lg font-semibold text-white mb-4">Today's Luck</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between border-b border-white/5 pb-3">
+<span class="text-gray-400">Color</span>
+<div class="flex items-center gap-2">
+<span class="w-4 h-4 rounded-full shadow-lg" id="luckyColorDot"></span>
+<span class="text-white font-medium" id="luckyColor">Emerald</span>
+</div>
+</div>
+<div class="flex items-center justify-between border-b border-white/5 pb-3">
+<span class="text-gray-400">Number</span>
+<span class="text-primary font-bold text-xl" id="luckyNumber">7</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-gray-400">Time</span>
+<span class="text-white font-medium" id="luckyTime">2:00 PM</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Right Column: Content -->
+<div class="lg:col-span-9 space-y-6">
+<!-- Timeframe Tabs -->
+<div class="glass-card rounded-full p-2 inline-flex w-full md:w-auto" id="timeframeTabs">
+<button data-period="daily" class="period-tab active-tab px-8 py-3 rounded-full text-sm font-bold transition-all shadow-lg">Daily</button>
+<button data-period="weekly" class="period-tab inactive-tab px-8 py-3 rounded-full text-sm font-bold hover:bg-white/5 transition-all">Weekly</button>
+<button data-period="monthly" class="period-tab inactive-tab px-8 py-3 rounded-full text-sm font-bold hover:bg-white/5 transition-all">Monthly</button>
+<button data-period="yearly" class="period-tab inactive-tab px-8 py-3 rounded-full text-sm font-bold hover:bg-white/5 transition-all">Yearly</button>
+</div>
+
+<!-- Main Featured Forecast -->
+<div class="glass-card rounded-2xl p-8 border-l-4 border-primary relative overflow-hidden group">
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-icons-round text-primary text-3xl" id="zodiacIcon">wb_sunny</span>
+<h2 class="text-2xl font-bold text-white" id="zodiacName">Leo Horoscope</h2>
+</div>
+<p class="text-gray-300 leading-relaxed text-lg mb-6" id="mainPrediction">
+    The Sun enters your house of creativity today, sparking a surge of inspiration. While the morning might start slow, expect a burst of energy by midday.
+</p>
+<div class="flex items-center gap-4">
+<div class="w-full bg-surface-dark h-2 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-primary to-yellow-200 h-full rounded-full shadow-[0_0_10px_rgba(244,195,47,0.5)]" id="moodBar" style="width: 85%"></div>
+</div>
+<span class="text-primary font-bold whitespace-nowrap" id="moodPercent">85% Mood</span>
+</div>
+</div>
+</div>
+
+<!-- Category Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="categoriesGrid">
+    <!-- Dynamic categories will be populated -->
+</div>
+
+<!-- Recommended Remedies Section -->
+<div class="mt-12 space-y-6" id="remediesSection">
+    <!-- Recommended products will be populated by JS -->
+</div>
+
+<div class="mt-8 text-center pt-8 border-t border-primary/10">
+<p class="text-primary italic text-lg font-light">"The stars only guide; they do not bind."</p>
+</div>
+</div>
+</div>
+</main>
+
+<script>
+    // Zodiac data with icons and detailed predictions
+    const zodiacs = [
+        { name: "Aries", icon: "local_fire_department", dates: "Mar 21 - Apr 19", element: "Fire", ruling: "Mars" },
+        { name: "Taurus", icon: "grass", dates: "Apr 20 - May 20", element: "Earth", ruling: "Venus" },
+        { name: "Gemini", icon: "people", dates: "May 21 - Jun 20", element: "Air", ruling: "Mercury" },
+        { name: "Cancer", icon: "water_drop", dates: "Jun 21 - Jul 22", element: "Water", ruling: "Moon" },
+        { name: "Leo", icon: "wb_sunny", dates: "Jul 23 - Aug 22", element: "Fire", ruling: "Sun" },
+        { name: "Virgo", icon: "spa", dates: "Aug 23 - Sep 22", element: "Earth", ruling: "Mercury" },
+        { name: "Libra", icon: "balance", dates: "Sep 23 - Oct 22", element: "Air", ruling: "Venus" },
+        { name: "Scorpio", icon: "bug_report", dates: "Oct 23 - Nov 21", element: "Water", ruling: "Pluto" },
+        { name: "Sagittarius", icon: "north_east", dates: "Nov 22 - Dec 21", element: "Fire", ruling: "Jupiter" },
+        { name: "Capricorn", icon: "landscape", dates: "Dec 22 - Jan 19", element: "Earth", ruling: "Saturn" },
+        { name: "Aquarius", icon: "waves", dates: "Jan 20 - Feb 18", element: "Air", ruling: "Uranus" },
+        { name: "Pisces", icon: "set_meal", dates: "Feb 19 - Mar 20", element: "Water", ruling: "Neptune" }
+    ];
+
+    // Comprehensive prediction database
+    const predictions = {
+        daily: {
+            Aries: { main: "Your fiery energy is at its peak today, Mars. Take initiative on pending projects but avoid rushing into arguments. Leadership opportunities arise.", mood: 88, career: "New opportunities knock at your door. Showcase your skills confidently.", love: "Romance heats up. A surprise message could make your heart flutter.", health: "High stamina. Perfect for high-intensity workouts.", finance: "Avoid gambling. Steady investments yield returns.", color: "Red", number: 9, time: "11:00 AM" },
+            Taurus: { main: "Venus blesses your finances. Stability and comfort are highlighted. Treat yourself but avoid overindulgence.", mood: 82, career: "Steady progress at work. A colleague seeks your advice.", love: "Quality time with partner strengthens bond. Single? A coffee date awaits.", health: "Throat needs care. Stay hydrated.", finance: "Good day for long-term investments.", color: "Green", number: 6, time: "3:00 PM" },
+            Gemini: { main: "Mercury enhances communication. Your wit charms everyone. Sign important papers today.", mood: 90, career: "Presentations go well. Networking brings benefits.", love: "Flirty conversations lead to deeper connections.", health: "Nervous energy? Try deep breathing.", finance: "Unexpected refund or bonus possible.", color: "Yellow", number: 5, time: "1:00 PM" },
+            Cancer: { main: "Moon makes you emotional yet intuitive. Trust your gut feelings. Family matters require attention.", mood: 75, career: "Work from home is favored. Creative solutions flow.", love: "Nurture your partner. Past issues heal.", health: "Digestion sensitive. Eat light meals.", finance: "Save for a rainy day. Avoid loans.", color: "Silver", number: 2, time: "7:00 PM" },
+            Leo: { main: "Sun illuminates your creative zone. Shine bright! Leadership and romance are favored.", mood: 85, career: "Promotion or recognition likely. Lead a team project.", love: "Dramatic romantic gestures work wonders.", health: "Heart and spine - stretch daily.", finance: "Luxury purchases tempting but save.", color: "Gold", number: 1, time: "2:00 PM" },
+            Virgo: { main: "Mercury sharpens your analytical mind. Organize your workspace. Health routines yield benefits.", mood: 80, career: "Detail-oriented tasks bring praise.", love: "Practical love languages matter most.", health: "Gut health improves with probiotics.", finance: "Budget review reveals savings.", color: "Brown", number: 4, time: "9:00 AM" },
+            Libra: { main: "Venus brings harmony to relationships. Justice prevails in disputes. Beauty projects thrive.", mood: 87, career: "Partnerships and contracts favorable.", love: "Balance between giving and receiving love.", health: "Kidney health - drink water.", finance: "Shared finances improve.", color: "Pink", number: 6, time: "5:00 PM" },
+            Scorpio: { main: "Pluto deepens your intensity. Transformation is near. Secrets may be revealed.", mood: 78, career: "Research and investigation succeed.", love: "Passionate encounters deepen bonds.", health: "Reproductive health focus needed.", finance: "Inheritance or settlement possible.", color: "Maroon", number: 8, time: "10:00 PM" },
+            Sagittarius: { main: "Jupiter expands your horizons. Travel and education favored. Optimism is your superpower.", mood: 92, career: "International business or legal wins.", love: "Adventure dates create memories.", health: "Hips and thighs - stretch well.", finance: "Overseas investments grow.", color: "Purple", number: 3, time: "12:00 PM" },
+            Capricorn: { main: "Saturn rewards your discipline. Career achievements recognized. Patience pays off.", mood: 84, career: "Promotion or new role awaits.", love: "Commitment deepens. Marriage talks possible.", health: "Bones and joints - calcium rich diet.", finance: "Long-term savings grow.", color: "Black", number: 10, time: "4:00 PM" },
+            Aquarius: { main: "Uranus brings innovation. Social causes call you. Technology projects succeed.", mood: 86, career: "Teamwork and tech ventures thrive.", love: "Unconventional relationships flourish.", health: "Circulation issues - move often.", finance: "Cryptocurrency? Caution advised.", color: "Blue", number: 11, time: "6:00 PM" },
+            Pisces: { main: "Neptune enhances intuition and creativity. Art and spirituality flow. Trust your dreams.", mood: 89, career: "Creative fields excel. Music and art.", love: "Soulmate connections feel magical.", health: "Feet and lymphatic system.", finance: "Donations bring good karma.", color: "Sea Green", number: 7, time: "8:00 PM" }
+        },
+        weekly: {
+            Aries: { main: "This week brings dynamic energy. Monday starts slow but Tuesday ignites your passion. Finish projects by Friday.", mood: 84, career: "Leadership role offered mid-week.", love: "Reconnect with an old flame? Weekend romantic.", health: "Energetic start, rest Sunday.", finance: "Unexpected expense Wednesday.", color: "Crimson", number: 8, time: "Tue 10 AM" },
+            Leo: { main: "Your ruling Sun shines all week. Spotlight on you. Creative projects win applause. Guard ego Thursday.", mood: 90, career: "Presentation wows bosses.", love: "Grand gestures win hearts.", health: "Heart strong, but rest needed.", finance: "Bonus or gift arrives.", color: "Orange", number: 5, time: "Wed 3 PM" }
+        },
+        monthly: {
+            Aries: { main: "Mars drives you all month. New beginnings in career. Mid-month financial caution. End month victory.", mood: 80, career: "New job or promotion likely.", love: "Passionate month for couples.", health: "High energy, manage stress.", finance: "Invest mid-month wisely.", color: "Scarlet", number: 9, time: "15th 12 PM" },
+            Leo: { main: "July/August is your season. Confidence high. Romance blooms. Career advancement possible after 20th.", mood: 92, career: "Leadership recognition.", love: "Proposal or engagement likely.", health: "Excellent vitality.", finance: "Lucky gains this month.", color: "Goldenrod", number: 1, time: "22nd 8 PM" }
+        },
+        yearly: {
+            Aries: { main: "Year of action! Jupiter brings expansion. Career leaps forward. Relationships tested but strengthen.", mood: 85, career: "Promotion or business growth.", love: "Commitment deepens by summer.", health: "Stay active all year.", finance: "Wealth increases steadily.", color: "Ruby", number: 9, time: "Spring Equinox" },
+            Leo: { main: "Your year of radiance! Solar returns bring joy. Creativity explodes. Travel and education favored.", mood: 95, career: "Major recognition/awards.", love: "Royal romance awaits.", health: "Excellent year overall.", finance: "Luxury and abundance.", color: "Gold", number: 1, time: "Your birthday month" }
+        }
+    };
+
+    // Mapping zodiacs to specific products from gemstones.html
+    const productSuggestions = {
+        "Aries": [
+            { name: "Tiger's Eye", type: "Gemstone", price: "₹2,800", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBUcW8A3p6C_vFbPrWz8M_K8hEmBMP9tWXymuPs5aYOxpCPVt8l0c1kMZQA7qjTHsb6HpcRzQfYrCXXdwcSSvzkqa-NmeOtcHsk8fgStEPik1QG-YHeoNNubP5r4-f0zAplPezW_LgEqYDLU1EvJL5yQJ4ai00THUII-UQZFRP-Xqz9HaSKRDPgiTL_G1TU9BVYAJE_AGWjOin5pR2CFl5Zo6cAI2tRNErl92VZbAAl3avKqfXghxai4zrTuNVGDXv29IpZKHIOBM0" },
+            { name: "Ruby Solar Pendant", type: "Jewelry", price: "₹1,56,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDB4KFbkHwxipVhgAyiYwQC7QvoYnNqeDlV_Dqpnc8N-uL3HqPMpK8i1opJxvu98TjQDQMVNIo5F3e9qO6gTYf35ON_1zLGi3jqU_UE-l1xXcxVfojRctlUYJW8drUdoccZh5tfeefVsirmQPT3r3u-y7XTfZsmN26Um5YJm--HlpFnm_su8DXIQBvcv1LPaAfAY-yiG4U90i2PxKNoIcAl3uwGoKUyxpamKLL-rgxyc2yqbeMzseqihnuIVYPxHw-d4HZvH2Virt0" }
+        ],
+        "Taurus": [
+            { name: "Diamond (Heera)", type: "Gemstone", price: "₹1,85,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCA3pBaKXKwos48gF4xM5RIcypBfz6rWA8yLeJu0_P9un8l0Ft39IE-w6Y_KzV7TvSiFnWylnn4Es0HZjuliydyaAt4ccnkVwv1W8VrBUKfl5fK5Z2zkNBViYmwM8uLFmtTt3l4kNPG9X3_5Ll12M_59J3FrnM78NybiuHOymWZ9JxOPLMdC_lsw8cmQXCHfyZn5FqbUsQXxiWqoG1PxGPTU4coq_fwTtOWGm_rAMkRiZGdJK0AEY01s6nKefhq93yUNgOkQ7cgkz8" },
+            { name: "Diamond Venus Ring", type: "Jewelry", price: "₹2,52,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBljeyoi1D1JZe6uuO8RZXs63r1PHRp0hY7tqyeV8mMcyHT5qgZocpm7Bzejhg5Z-D1tBdYkz6iM56sv_DUa0tK0sXTfdIbh-OVWCt2Z8ruMT5E6S7Jea-uARrq4gwOzGnoIxjF8JBm7xZVoEQ0K8ShDoKAEIkGHB4nadCvBqLLabSDbk9Mc-miCXUIMHouR9xWPY1lIwIytlVJQAZ69MBErIlYH0jGZE1S7QRvqfeMkthmZUbSqnWUT0e5V5FgJOhO-2Z5-RMS0zo" }
+        ],
+        "Gemini": [
+            { name: "Emerald (Panna)", type: "Gemstone", price: "₹48,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuD0pDKoMEe6R5Q-gYcYB3oMmg74z-D42UBtIeiSRZgWkZhHECnCDTzXzA7An9FUBXOECtOL1pMGEGaUQqfu9mhcEH7kRk8eFrpsNjZ2dMNnqR-5o9F-aQOeYMXuwt4_HDRUIXSsJ4l1he5UlMpHSRS57V12TmgECKIlOdfqHPA4oWjTzEVbEOwDGiDStOgvoTnhl7DHCcR9gSDR8A2lHVzr6XH_UBMl8lJy6bN0rh7DGlGNouERjRWMNUxtHdJWRLjRXhPfPBg1SoQ" },
+            { name: "Emerald Mercury Bracelet", type: "Jewelry", price: "₹72,500", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuA7c-GV5HhDs-Ya--T8Ce78CIqczVN6aoa3Kc_QQUSLKSH0xzAKsQEmHZS13rOeQsR6M7HFnkdoh8h3Al7S4qUH2vDZSNCiRYBFzYjv7CeDP-blRdF4CcYvAgtowW-t3ng7Wjk6EFkt2i6YRgQPeqCksRtwMo2r880nY17tQg8PSEnBNCAWwc9-XRzTov9VmNqgHPXjEo5sKw7XDaxxMxygRnSD9Odu1Tlrt4FXZ9l6nk2rRlCUB6tfEg7UHVj8JkqKlnaF5v1Sohw" }
+        ],
+        "Cancer": [
+            { name: "Moonstone", type: "Gemstone", price: "₹6,200", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAiXOfsGAAzaX62-CBXeO61SZ4wSCYHbqbMqwvCn1WUVeeHKLSfDiPYXQYWxUfyo53OQdKISPfVGIBadXUgvPVZOGYnU8aYqorHp5kR9ijHNXRH1L8PN-WO9m2kwDsy_O8vZrUQuihk7YBdnhuwmqgmWiCCiG7gz1inJ1Vs9LF4e3VOV_WXgKBgq0QtUdvlM4et-vm9IFJWmyTdFZeD_H_Oj2RHsLgLxisRYbXzenX2EOTufWYUkgI_ok-G00-UsXoL2-HJ3Pd3aeU" },
+            { name: "Pearl Lunar Ring", type: "Jewelry", price: "₹61,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCuj6p2u8JAGP20Jvd9lvb0FmRTGEFKNcK7IyIlTFH6TJsfyaHi1K3dF-fepOwH71t3LbALrvK8ppBHn7RJOCf3ObdWtahykKUyI4_8ZcZGZeF7qgOKPBDIYh2Xb_uW22hDKtUrVeZ9r0KiXjB5aFc8tHsGbI1_ovZwAmKKG3znoitJZMxjEbC4__8n6ocejPSGcu-QLcTCj6FxDv5PbG4tsThHrAZ2c0-AO8acHrSLS0oxsb5zaZvb4JIHgrJrVzHBNQJv_u7gdWg" }
+        ],
+        "Leo": [
+            { name: "Ruby (Manik)", type: "Gemstone", price: "₹65,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCV9O1HK_qGSt1KStUzksUuBw0cfym4ZtSn0ULd8bFpjOZ9mAIU6yNGB_iKNT06UxvnvS3q0eeFXIMQzQJS4GEn4rFUf_a1hwLnWt7vtc2SkTAD_u-8XEAtsz5cmg786JL9y9wYDKCTLl5nE9Bc4EIx9kKRcQrV9mTAm5JNEZJdSNc_PDHyCmCOWSGPQ2jC6WoAXGWAGotf-hJdjDixuqdDM_9em_u8aA0n_U36eSplBbw2T7Goleb-7GKyf6gHydzTzxgPN2THANM" },
+            { name: "Ruby Solar Pendant", type: "Jewelry", price: "₹1,56,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDB4KFbkHwxipVhgAyiYwQC7QvoYnNqeDlV_Dqpnc8N-uL3HqPMpK8i1opJxvu98TjQDQMVNIo5F3e9qO6gTYf35ON_1zLGi3jqU_UE-l1xXcxVfojRctlUYJW8drUdoccZh5tfeefVsirmQPT3r3u-y7XTfZsmN26Um5YJm--HlpFnm_su8DXIQBvcv1LPaAfAY-yiG4U90i2PxKNoIcAl3uwGoKUyxpamKLL-rgxyc2yqbeMzseqihnuIVYPxHw-d4HZvH2Virt0" }
+        ],
+        "Virgo": [
+            { name: "Emerald (Panna)", type: "Gemstone", price: "₹48,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuD0pDKoMEe6R5Q-gYcYB3oMmg74z-D42UBtIeiSRZgWkZhHECnCDTzXzA7An9FUBXOECtOL1pMGEGaUQqfu9mhcEH7kRk8eFrpsNjZ2dMNnqR-5o9F-aQOeYMXuwt4_HDRUIXSsJ4l1he5UlMpHSRS57V12TmgECKIlOdfqHPA4oWjTzEVbEOwDGiDStOgvoTnhl7DHCcR9gSDR8A2lHVzr6XH_UBMl8lJy6bN0rh7DGlGNouERjRWMNUxtHdJWRLjRXhPfPBg1SoQ" },
+            { name: "Emerald Mercury Bracelet", type: "Jewelry", price: "₹72,500", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuA7c-GV5HhDs-Ya--T8Ce78CIqczVN6aoa3Kc_QQUSLKSH0xzAKsQEmHZS13rOeQsR6M7HFnkdoh8h3Al7S4qUH2vDZSNCiRYBFzYjv7CeDP-blRdF4CcYvAgtowW-t3ng7Wjk6EFkt2i6YRgQPeqCksRtwMo2r880nY17tQg8PSEnBNCAWwc9-XRzTov9VmNqgHPXjEo5sKw7XDaxxMxygRnSD9Odu1Tlrt4FXZ9l6nk2rRlCUB6tfEg7UHVj8JkqKlnaF5v1Sohw" }
+        ],
+        "Libra": [
+            { name: "Diamond (Heera)", type: "Gemstone", price: "₹1,85,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCA3pBaKXKwos48gF4xM5RIcypBfz6rWA8yLeJu0_P9un8l0Ft39IE-w6Y_KzV7TvSiFnWylnn4Es0HZjuliydyaAt4ccnkVwv1W8VrBUKfl5fK5Z2zkNBViYmwM8uLFmtTt3l4kNPG9X3_5Ll12M_59J3FrnM78NybiuHOymWZ9JxOPLMdC_lsw8cmQXCHfyZn5FqbUsQXxiWqoG1PxGPTU4coq_fwTtOWGm_rAMkRiZGdJK0AEY01s6nKefhq93yUNgOkQ7cgkz8" },
+            { name: "Rose Quartz", type: "Gemstone", price: "₹1,800", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCvx1I_0QBTPSsB4vj8pYKWzPtIksLeU6a2S3BmeUMJ-vlmusUCeSdKg9imYpSVpyWAqJ2P79-vVej2m9uh6nAIb34stI_vP6k1UNMNMSDN1S9T50kAzyOoDkowaVxOzeTsJDfrEo-2liuI5tHnxztygVC2YOvz_tbqk6kR0n7pltE5gabLVXsRFqEqaa8iRUKbVzBdqE4H7JgFRlN8YPnfvBShI_OO90eNWztKMAyScrZArI6PIcfk2X0Z3s47KnB5MfQkNIvrLtk" }
+        ],
+        "Capricorn": [
+            { name: "Blue Sapphire", type: "Gemstone", price: "₹35,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBnTmnk3k4shDw9TvXRl854h4t9iropmfqmp7rOKjKEAXIHKZoB6FtifkiWymPMnZidez40sM31vkf-Zq2Sut0ltWUkiXHtbEZ_uyKZwVoarRBwVPZz9WyBMjKSu78FqYZGuJqA7V2_cwo5fVLLCTbue9izFobmDLOLc3bUL7lVhboiInhZsjcwAt1cB4NDPMY5PB-hacI0wy0Jt4F84a2rFmilsGDdJz6aE_e-W08Xbi6M05vZ59Wg-gIlWK29e_e21xhVb5WJza0" },
+            { name: "Blue Sapphire Saturn Ring", type: "Jewelry", price: "₹92,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBkukzdbxVCi1OVFrnsG_a07LpbGO8YCby2Bp1-1Pzgo07qhtvo4yrkJ1A8IgCZB-bMXXIXdHf9gA3nuP8hAmHSNciVxPqEPGEzypq7AGTQubCj6l65_vSTQSM2E9Xh48ViJcm1bojkOItLmpg0GE7nzOGfdmNiQPyHtt7kmq_cdLAa3id4tdkMo1ISoLtTs97UzDSwjHBKMNPFzOY6szy9Cy6vXutXKJSgvAKduCje1EfUpixYkq5Ks20QXil-MIzi7wnDBJkjUbI" }
+        ],
+        "default": [
+            { name: "5 Mukhi Rudraksha", type: "Sacred", price: "₹2,100", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAvm8Of8KomGuaoQKmL_3dffZRpzuOgUi0dPyAIAm55X2gQ-fJdrRs8nQttYG_5Pc7fzPnvoYLaRn10DvuAa3qlej5PbYKYG6vAxSefCSVLeEQfLqpFnaFPsV4hNGIM8pwB0fno1kg2LEYlE6npaeDxLKFM7fczLgtylkEuTwwmongjBY0BTvoTGvyw5lg6Ij0Sm37DTqEGyF7sjtKvZJGWnn2Tv7QnNiBdc7lLDPim3EUa8HB0j_HUXpVOz1mHICIUOPfUjKu1j0g" },
+            { name: "Shree Yantra", type: "Yantra", price: "₹4,500", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCOdLP-VfLjA2YGiOLiiBh_x-UQ21NZO_zhEed_9zUiUc0YsVGJM0OPUbqNaBjfJEJhCqNHl2TzjmDBg0DT1VEeI8GYLqbE1RK3pBDxPyn_V41AyCKM0S0KpxMM-MSJ9LhRXFYbg8HDye-_evhb_R1S6-GzB67DgMnFkKClFJ4VXdlXO0Pg8WeZxdX-1B6ONJx0CqKn-3ZpzpSQZ5fe9KNG4CADyu7vmfuwbNXsm7ybVKOMx2ussVmn9HLpjHAbTy3cwjH6laEygJg" }
+        ]
+    };
+
+    // Helper to get prediction with fallback
+    function getPrediction(zodiac, period) {
+        const periodData = predictions[period];
+        if (periodData && periodData[zodiac]) return periodData[zodiac];
+        // Generate dynamic prediction for missing combinations
+        const zodiacData = zodiacs.find(z => z.name === zodiac);
+        const base = predictions.daily[zodiac] || predictions.daily.Aries;
+        return {
+            main: `${period.charAt(0).toUpperCase() + period.slice(1)} horoscope for ${zodiac}: ${zodiacData?.element || 'Fire'} energy guides you. Focus on ${period === 'yearly' ? 'long-term goals' : 'current opportunities'}.`,
+            mood: 70 + Math.floor(Math.random() * 20),
+            career: `Your ${period} career path shows growth potential.`,
+            love: `Relationships require communication this ${period}.`,
+            health: `Balance and self-care are key.`,
+            finance: `Stable finances with planning.`,
+            color: ["Gold","Silver","Ruby","Emerald","Sapphire"][Math.floor(Math.random()*5)],
+            number: Math.floor(Math.random()*10)+1,
+            time: "Noon"
+        };
+    }
+
+    let currentZodiac = "Leo";
+    let currentPeriod = "daily";
+
+    function updateDate() {
+        const now = new Date();
+        document.getElementById('currentDate').innerText = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const transits = ["Moon in Pisces", "Moon in Aries", "Moon in Taurus", "Moon in Gemini", "Moon in Cancer", "Moon in Leo"];
+        const transitIndex = now.getDate() % transits.length;
+        document.getElementById('transitSign').innerText = transits[transitIndex];
+        document.getElementById('transitDesc').innerText = transitIndex % 2 === 0 ? "Intuition is heightened today." : "Focus on practical matters.";
+    }
+
+    function buildZodiacGrid() {
+        const grid = document.getElementById('zodiacGrid');
+        
+        // Auto-select from home page prediction
+        const savedZodiac = localStorage.getItem('astrovani_selected_zodiac');
+        if (savedZodiac && zodiacs.some(z => z.name === savedZodiac)) {
+            currentZodiac = savedZodiac;
+            localStorage.removeItem('astrovani_selected_zodiac');
+        }
+
+        grid.innerHTML = '';
+        zodiacs.forEach(zodiac => {
+            const btn = document.createElement('button');
+            btn.className = `aspect-square rounded-xl bg-surface-dark hover:bg-primary/20 border border-transparent hover:border-primary/50 flex items-center justify-center transition-all group zodiac-btn ${currentZodiac === zodiac.name ? 'zodiac-btn-active' : ''}`;
+            btn.title = zodiac.name;
+            btn.setAttribute('data-zodiac', zodiac.name);
+            btn.innerHTML = `<span class="material-icons-round text-gray-400 group-hover:text-primary ${currentZodiac === zodiac.name ? '!text-background-dark' : ''}">${zodiac.icon}</span>`;
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.zodiac-btn').forEach(b => b.classList.remove('zodiac-btn-active'));
+                btn.classList.add('zodiac-btn-active');
+                currentZodiac = zodiac.name;
+                updateAllContent();
+            });
+            grid.appendChild(btn);
+        });
+    }
+
+    function updateAllContent() {
+        const pred = getPrediction(currentZodiac, currentPeriod);
+        const zodiac = zodiacs.find(z => z.name === currentZodiac);
+        document.getElementById('zodiacIcon').innerHTML = zodiac.icon;
+        document.getElementById('zodiacName').innerHTML = `${currentZodiac} Horoscope`;
+        document.getElementById('mainPrediction').innerHTML = pred.main;
+        document.getElementById('moodBar').style.width = `${pred.mood}%`;
+        document.getElementById('moodPercent').innerHTML = `${pred.mood}% Mood`;
+        
+        // Update Luck Widget
+        document.getElementById('luckyColor').innerHTML = pred.color;
+        document.getElementById('luckyColorDot').className = `w-4 h-4 rounded-full shadow-lg bg-${pred.color.toLowerCase().replace(' ', '')}-500`;
+        if (!pred.color.toLowerCase().includes('gold') && !pred.color.toLowerCase().includes('silver')) {
+            document.getElementById('luckyColorDot').style.backgroundColor = pred.color.toLowerCase() === 'red' ? '#ef4444' : pred.color.toLowerCase() === 'green' ? '#10b981' : pred.color.toLowerCase() === 'blue' ? '#3b82f6' : '#f4c32f';
+        } else {
+            document.getElementById('luckyColorDot').style.backgroundColor = pred.color.toLowerCase() === 'gold' ? '#fbbf24' : '#9ca3af';
+        }
+        document.getElementById('luckyNumber').innerHTML = pred.number;
+        document.getElementById('luckyTime').innerHTML = pred.time;
+        
+        // Update Categories Grid
+        const categories = [
+            { title: "Career & Growth", icon: "work_outline", color: "blue", text: pred.career, badge: "Focus" },
+            { title: "Love & Relationships", icon: "favorite_border", color: "rose", text: pred.love, badge: "Trending" },
+            { title: "Health & Wellness", icon: "spa", color: "emerald", text: pred.health, badge: "Good" },
+            { title: "Finance & Wealth", icon: "account_balance_wallet", color: "primary", text: pred.finance, badge: "Advice" }
+        ];
+        const gridContainer = document.getElementById('categoriesGrid');
+        gridContainer.innerHTML = '';
+        categories.forEach(cat => {
+            const card = document.createElement('div');
+            card.className = 'glass-card rounded-2xl p-6 category-card';
+            card.innerHTML = `
+                <div class="flex items-start justify-between mb-4">
+                    <div class="p-3 rounded-xl bg-${cat.color}-500/20 text-${cat.color}-400 transition-all">
+                        <span class="material-icons-round">${cat.icon}</span>
+                    </div>
+                    <span class="text-xs font-bold px-2 py-1 rounded bg-${cat.color}-500/10 text-${cat.color}-400 border border-${cat.color}-500/20">${cat.badge}</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">${cat.title}</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">${cat.text}</p>
+            `;
+            gridContainer.appendChild(card);
+        });
+
+        // Update Recommended Remedies Section
+        const remediesContainer = document.getElementById('remediesSection');
+        const suggestions = productSuggestions[currentZodiac] || productSuggestions["default"];
+        
+        remediesContainer.innerHTML = `
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="material-icons-round text-primary">auto_fix_high</span>
+                    Cosmic Remedies for ${currentZodiac}
+                </h3>
+                <a href="gemstones.html" class="text-primary text-sm font-bold hover:underline">Browse Store →</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                ${suggestions.map(prod => `
+                    <a href="gemstones.html" class="glass-card rounded-2xl p-4 flex items-center gap-5 category-card border border-white/5 hover:border-primary/50 group">
+                        <div class="w-24 h-24 rounded-xl overflow-hidden bg-surface-dark shrink-0">
+                            <img src="${prod.img}" alt="${prod.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        </div>
+                        <div class="flex-grow">
+                            <div class="text-xs text-primary font-bold uppercase tracking-wider mb-1">${prod.type}</div>
+                            <h4 class="text-lg font-bold text-white group-hover:text-primary transition-colors">${prod.name}</h4>
+                            <div class="text-white font-semibold mt-1">${prod.price}</div>
+                            <div class="text-xs text-gray-500 mt-2 flex items-center gap-1">View Details <span class="material-icons-round text-[10px]">arrow_forward</span></div>
+                        </div>
+                    </a>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function initTimeframeTabs() {
+        const tabs = document.querySelectorAll('.period-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('active-tab');
+                    t.classList.add('inactive-tab');
+                });
+                tab.classList.remove('inactive-tab');
+                tab.classList.add('active-tab');
+                currentPeriod = tab.getAttribute('data-period');
+                updateAllContent();
+            });
+        });
+    }
+
+    // Mobile menu toggle
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const mobileDropdown = document.getElementById('mobileMenuDropdown');
+    mobileBtn?.addEventListener('click', () => mobileDropdown.classList.toggle('hidden'));
+
+    // Sticky nav blur effect
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('mainNav');
+        if (window.scrollY > 50) nav.classList.add('bg-background-dark/90', 'backdrop-blur-xl');
+        else nav.classList.remove('bg-background-dark/90');
+    });
+
+    // Initialize all
+    updateDate();
+    buildZodiacGrid();
+    initTimeframeTabs();
+    updateAllContent();
+</script>
+</body>
+</html>
